@@ -1,0 +1,170 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationCause>
+@{
+    ViewData["Title"] = "Manage Donation Causes";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">Donation Causes</h2>
+        <p class="text-muted small mb-0">Create, edit, and dynamically manage welfare causes with target goals.</p>
+    </div>
+    <a asp-area="Admin" asp-controller="Causes" asp-action="Create" class="btn btn-primary btn-sm flex-shrink-0">
+        <i class="bi bi-plus-circle me-1"></i> Add New Cause
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-4 text-center text-muted">No causes found. Click "Add New Cause" to create one.</div>
+}
+else
+{
+    <div class="d-md-none d-flex flex-column gap-3 mb-4">
+        @foreach (var c in Model)
+        {
+            var percentage = c.TargetAmount > 0 ? (int)Math.Min(100, Math.Round((c.RaisedAmount / c.TargetAmount) * 100)) : 0;
+            <div class="admin-mobile-card">
+                <div class="d-flex align-items-start gap-3 mb-2">
+                    <img src="@(string.IsNullOrEmpty(c.ImageUrl) ? "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=100&auto=format&fit=crop&q=80" : c.ImageUrl)"
+                         class="rounded admin-thumb" alt="@c.Title" />
+                    <div class="min-w-0 flex-grow-1">
+                        <div class="fw-bold">@c.Title</div>
+                        <code class="small">@c.Code</code>
+                    </div>
+                    @if (c.IsActive)
+                    {
+                        <span class="badge bg-success flex-shrink-0">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary flex-shrink-0">Inactive</span>
+                    }
+                </div>
+                <div class="admin-mobile-meta mb-3">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Category</span>
+                        <span class="admin-mobile-value"><span class="badge bg-light text-dark border">@c.Category</span></span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Goal</span>
+                        <span class="admin-mobile-value fw-semibold">PKR @c.TargetAmount.ToString("N0")</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Raised</span>
+                        <span class="admin-mobile-value fw-bold text-success">PKR @c.RaisedAmount.ToString("N0")</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Progress</span>
+                        <span class="admin-mobile-value">
+                            <div class="progress admin-progress-inline ms-auto" style="height: 5px;">
+                                <div class="progress-bar bg-success" style="width: @percentage%;"></div>
+                            </div>
+                            <small class="text-muted">@percentage% funded</small>
+                        </span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Featured</span>
+                        <span class="admin-mobile-value">
+                            @if (c.IsFeatured)
+                            {
+                                <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> Yes</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">No</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+                <div class="admin-mobile-actions">
+                    <a asp-area="Admin" asp-controller="Causes" asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i> Edit
+                    </a>
+                    <form asp-area="Admin" asp-controller="Causes" asp-action="ToggleStatus" asp-route-id="@c.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm @(c.IsActive ? "btn-outline-warning" : "btn-outline-success")">
+                            <i class="bi @(c.IsActive ? "bi-pause-circle" : "bi-play-circle") me-1"></i>
+                            @(c.IsActive ? "Pause" : "Activate")
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden d-none d-md-block">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Image</th>
+                        <th>Code</th>
+                        <th>Cause Title</th>
+                        <th>Category</th>
+                        <th>Goal (PKR)</th>
+                        <th>Raised (PKR)</th>
+                        <th>Featured</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        var percentage = c.TargetAmount > 0 ? (int)Math.Min(100, Math.Round((c.RaisedAmount / c.TargetAmount) * 100)) : 0;
+                        <tr>
+                            <td>
+                                <img src="@(string.IsNullOrEmpty(c.ImageUrl) ? "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=100&auto=format&fit=crop&q=80" : c.ImageUrl)"
+                                     class="rounded admin-thumb" alt="@c.Title">
+                            </td>
+                            <td><code>@c.Code</code></td>
+                            <td>
+                                <div class="fw-bold">@c.Title</div>
+                                <div class="progress mt-1 admin-progress-inline">
+                                    <div class="progress-bar bg-success" style="width: @percentage%;"></div>
+                                </div>
+                                <small class="text-muted">@percentage% funded</small>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">@c.Category</span></td>
+                            <td class="fw-semibold text-nowrap">PKR @c.TargetAmount.ToString("N0")</td>
+                            <td class="fw-bold text-success text-nowrap">PKR @c.RaisedAmount.ToString("N0")</td>
+                            <td>
+                                @if (c.IsFeatured)
+                                {
+                                    <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">No</span>
+                                }
+                            </td>
+                            <td>
+                                @if (c.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex flex-wrap justify-content-end gap-1">
+                                    <a asp-area="Admin" asp-controller="Causes" asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-area="Admin" asp-controller="Causes" asp-action="ToggleStatus" asp-route-id="@c.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(c.IsActive ? "btn-outline-warning" : "btn-outline-success")" title="Toggle Status">
+                                            <i class="bi @(c.IsActive ? "bi-pause-circle" : "bi-play-circle")"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

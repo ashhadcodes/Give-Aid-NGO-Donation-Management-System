@@ -1,0 +1,138 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.ContactMessage>
+@{
+    ViewData["Title"] = "Contact Messages";
+    var currentStatus = ViewBag.SelectedStatus as Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus?;
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">Public Inquiries & Messages</h2>
+        <p class="text-muted small mb-0">Review and reply to messages submitted through the public Contact page.</p>
+    </div>
+</div>
+
+<div class="mb-3 d-flex gap-2 flex-wrap">
+    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Index" class="btn btn-sm @(!currentStatus.HasValue ? "btn-primary" : "btn-outline-secondary")">
+        All Messages
+    </a>
+    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Index" asp-route-status="@Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.New"
+       class="btn btn-sm @(currentStatus == Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.New ? "btn-primary" : "btn-outline-secondary")">
+        New / Unread
+    </a>
+    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Index" asp-route-status="@Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.InReview"
+       class="btn btn-sm @(currentStatus == Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.InReview ? "btn-primary" : "btn-outline-secondary")">
+        In Review
+    </a>
+    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Index" asp-route-status="@Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Replied"
+       class="btn btn-sm @(currentStatus == Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Replied ? "btn-primary" : "btn-outline-secondary")">
+        Replied
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-4 text-center text-muted">No messages found for this filter.</div>
+}
+else
+{
+    <div class="d-md-none d-flex flex-column gap-3 mb-4">
+        @foreach (var msg in Model)
+        {
+            <div class="admin-mobile-card @(!msg.IsRead ? "border-primary" : "")">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                    <div class="min-w-0">
+                        <div class="fw-semibold">@msg.Subject</div>
+                        <small class="text-muted">@msg.Name · @msg.Email</small>
+                    </div>
+                    @switch (msg.Status)
+                    {
+                        case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.New:
+                            <span class="badge bg-danger flex-shrink-0">New</span>
+                            break;
+                        case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.InReview:
+                            <span class="badge bg-warning text-dark flex-shrink-0">In Review</span>
+                            break;
+                        case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Replied:
+                            <span class="badge bg-success flex-shrink-0">Replied</span>
+                            break;
+                        case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Archived:
+                            <span class="badge bg-secondary flex-shrink-0">Archived</span>
+                            break;
+                    }
+                </div>
+                <p class="text-muted small mb-3">@msg.Message</p>
+                <div class="admin-mobile-meta mb-3">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Phone</span>
+                        <span class="admin-mobile-value">@(string.IsNullOrEmpty(msg.Phone) ? "-" : msg.Phone)</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Date</span>
+                        <span class="admin-mobile-value text-muted small">@msg.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Details" asp-route-id="@msg.Id" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-envelope-open me-1"></i> View & Reply
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden d-none d-md-block">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Status</th>
+                        <th>Sender</th>
+                        <th>Subject</th>
+                        <th>Phone</th>
+                        <th>Date</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var msg in Model)
+                    {
+                        <tr class="@(!msg.IsRead ? "fw-semibold table-light" : "")">
+                            <td>
+                                @switch (msg.Status)
+                                {
+                                    case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.New:
+                                        <span class="badge bg-danger">New</span>
+                                        break;
+                                    case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.InReview:
+                                        <span class="badge bg-warning text-dark">In Review</span>
+                                        break;
+                                    case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Replied:
+                                        <span class="badge bg-success">Replied</span>
+                                        break;
+                                    case Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Archived:
+                                        <span class="badge bg-secondary">Archived</span>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                <div>@msg.Name</div>
+                                <small class="text-muted">@msg.Email</small>
+                            </td>
+                            <td>
+                                <div>@msg.Subject</div>
+                                <small class="text-muted">@msg.Message</small>
+                            </td>
+                            <td>@(string.IsNullOrEmpty(msg.Phone) ? "-" : msg.Phone)</td>
+                            <td class="text-muted small">@msg.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td class="text-end">
+                                <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Details" asp-route-id="@msg.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-envelope-open me-1"></i> View & Reply
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

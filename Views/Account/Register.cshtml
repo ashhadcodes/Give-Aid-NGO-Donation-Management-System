@@ -1,0 +1,103 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Create a Supporter Account";
+}
+
+<div class="container py-5 my-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-12">
+            <div class="card border-0 shadow-lg p-4 p-md-5 tilt-card-3d auth-card" style="border-radius: var(--radius-xl);">
+                <div class="text-center mb-4 card-3d-depth-1">
+                    <span class="brand-badge bg-success text-white px-3 py-1.5 rounded-pill fw-bold fs-6 mb-2 d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-heart-pulse-fill"></i> Give-AID Member Registration
+                    </span>
+                    <h2 class="fw-bolder text-dark">Join the Give-AID Network</h2>
+                    <p class="text-secondary small">Create your verified donor profile to track donations, volunteer drives, and field impact.</p>
+                </div>
+
+                <form asp-controller="Account" asp-action="Register" method="post" class="card-3d-depth-2">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <h5 class="fw-bold text-gradient-teal mb-3"><i class="bi bi-person-badge-fill me-1"></i> Personal Information</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="FullName" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="FullName" class="form-control" placeholder="e.g. Tariq Mahmood" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="+92-300-1234567" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Profession" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Profession" class="form-control" placeholder="e.g. Software Engineer, Doctor, Teacher" />
+                            <span asp-validation-for="Profession" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="City" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="City" class="form-control" placeholder="e.g. Islamabad" />
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Country" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Country" class="form-control" value="Pakistan" />
+                            <span asp-validation-for="Country" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Address" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Address" class="form-control" placeholder="Residential Street / Area Address" />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DateOfBirth" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="DateOfBirth" class="form-control" type="date" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-gradient-teal mb-3"><i class="bi bi-shield-lock-fill me-1"></i> Account Security</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Password" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Choose a strong password" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Repeat your password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="AcceptTerms" class="form-check-input" type="checkbox" id="termsCheck" />
+                        <label asp-for="AcceptTerms" class="form-check-label small text-secondary" for="termsCheck">
+                            I agree to the <a asp-controller="Home" asp-action="Privacy" target="_blank" class="text-warning">Terms of Service & Privacy Policy</a>.
+                        </label>
+                        <span asp-validation-for="AcceptTerms" class="text-danger d-block small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-sm btn-pulse">
+                        <i class="bi bi-person-check-fill me-2"></i> Register Member Account
+                    </button>
+
+                    <div class="text-center mt-4 small text-secondary">
+                        Already have an account? <a asp-controller="Account" asp-action="Login" class="fw-bold text-warning">Log In here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

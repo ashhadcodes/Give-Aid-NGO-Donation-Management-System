@@ -1,0 +1,132 @@
+@model Give_Aid_NGO_Donation_Management_System.Areas.Admin.ViewModels.ProgrammeFormViewModel
+@{
+    ViewData["Title"] = "Edit Welfare Programme";
+}
+
+<div class="mb-4">
+    <a asp-area="Admin" asp-controller="Programmes" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Programmes
+    </a>
+    <h2 class="fw-bold mb-1">Edit Programme: @Model.Title</h2>
+    <p class="text-muted small">Update event dates, progress status, and capacity parameters.</p>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm p-3 p-sm-4">
+            <form asp-area="Admin" asp-controller="Programmes" asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="Title" class="form-label fw-semibold"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Category" class="form-label fw-semibold"></label>
+                        <select asp-for="Category" class="form-select">
+                            <option value="Education">Education</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Disaster Relief">Disaster Relief</option>
+                            <option value="Food & Ration">Food & Ration</option>
+                            <option value="Skill Development">Skill Development</option>
+                            <option value="Water Infrastructure">Water Infrastructure</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="NGOId" class="form-label fw-semibold"></label>
+                        <select asp-for="NGOId" class="form-select">
+                            <option value="">-- Central Give-AID Initiative --</option>
+                            @if (Model.AvailableNgos != null)
+                            {
+                                @foreach (var ngo in Model.AvailableNgos)
+                                {
+                                    <option value="@ngo.Id" selected="@(ngo.Id == Model.NGOId)">@ngo.Name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="NGOId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="StartDate" class="form-label fw-semibold"></label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="EndDate" class="form-label fw-semibold"></label>
+                        <input asp-for="EndDate" type="date" class="form-control" />
+                        <span asp-validation-for="EndDate" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label asp-for="Location" class="form-label fw-semibold"></label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Capacity" class="form-label fw-semibold">Capacity / Target</label>
+                        <input asp-for="Capacity" type="number" class="form-control" />
+                        <span asp-validation-for="Capacity" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ImageFile" class="form-label fw-semibold"></label>
+                        <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ImageUrl" class="form-label fw-semibold">Current Image URL</label>
+                        <input asp-for="ImageUrl" class="form-control" />
+                        <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Cover Image</label>
+                            <div>
+                                <img src="@Model.ImageUrl" class="rounded shadow-sm" style="height: 80px; object-fit: cover;" alt="Cover" />
+                            </div>
+                        </div>
+                    }
+
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label fw-semibold"></label>
+                        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<Give_Aid_NGO_Donation_Management_System.Models.Entities.ProgrammeStatus>()"></select>
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center mt-4">
+                        <div class="form-check form-switch">
+                            <input asp-for="IsFeatured" class="form-check-input" type="checkbox" />
+                            <label asp-for="IsFeatured" class="form-check-label fw-semibold">Feature on Home Page</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4"><div class="admin-form-actions"><button type="submit" class="btn btn-primary px-4 fw-bold">
+                            <i class="bi bi-check-circle me-1"></i> Update Programme
+                        </button><a asp-area="Admin" asp-controller="Programmes" asp-action="Index" class="btn btn-outline-secondary">Cancel</a></div></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

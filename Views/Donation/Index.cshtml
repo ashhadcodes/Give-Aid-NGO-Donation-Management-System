@@ -1,0 +1,158 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationCause>
+@{
+    ViewData["Title"] = "Active Humanitarian Causes & Campaigns";
+    var categories = ViewBag.Categories as IEnumerable<string> ?? Enumerable.Empty<string>();
+    var selectedCat = ViewBag.SelectedCategory as string;
+    var searchStr = ViewBag.SearchString as string;
+}
+
+<div class="container py-4 py-md-5">
+    <!-- Header Section -->
+    <div class="text-center max-w-2xl mx-auto mb-4 mb-md-5" data-aos="fade-up">
+        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1.5 rounded-pill mb-2">
+            <i class="bi bi-heart-pulse-fill me-1"></i> Give-AID Directory
+        </span>
+        <h1 class="display-5 fw-bold mb-2 text-dark">Verified Welfare Causes</h1>
+        <p class="text-secondary mb-0">Choose a certified cause that inspires you. 100% of your contribution reaches verified ground operations with transparent audit trails.</p>
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4 mb-lg-5 rounded-4" data-aos="fade-up">
+        <form asp-controller="Donation" asp-action="Index" method="get" class="row g-2 g-md-3 align-items-center">
+            <div class="col-lg-5 col-md-5 col-12">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="searchString" value="@searchStr" class="form-control border-start-0" placeholder="Search by title, location, category..." />
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                <select name="category" class="form-select">
+                    <option value="">All Welfare Categories</option>
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat" selected="@(selectedCat == cat)">@cat</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                    <i class="bi bi-funnel-fill me-1"></i> Filter
+                </button>
+                @if (!string.IsNullOrEmpty(searchStr) || !string.IsNullOrEmpty(selectedCat))
+                {
+                    <a asp-controller="Donation" asp-action="Index" class="btn btn-outline-secondary" title="Clear Filters">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <!-- Causes Grid: Desktop >=1200 (xl-3 = 4/row), Tablet md-6 (2/row), Mobile col-12 (1/row) -->
+    <div class="row g-3 g-xl-4 ga-card-row" id="causesGrid">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <div class="p-4 p-md-5 rounded-4 bg-light border">
+                    <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
+                    <h4 class="fw-bold text-dark">No welfare causes matched your search.</h4>
+                    <p class="text-secondary small mb-3">Try different keywords or reset the category filter to browse all active campaigns.</p>
+                    <a asp-controller="Donation" asp-action="Index" class="btn btn-primary fw-semibold">Browse All Causes</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var cause in Model)
+            {
+                var percentage = cause.TargetAmount > 0 ? (int)Math.Min(100, Math.Round((cause.RaisedAmount / cause.TargetAmount) * 100)) : 0;
+                var catIcon = cause.Category?.ToLowerInvariant() switch
+                {
+                    "healthcare" or "health" or "medical" => "bi-heart-pulse-fill",
+                    "education" or "school" => "bi-mortarboard-fill",
+                    "children" or "orphan" or "orphan support" => "bi-person-heart",
+                    "water" or "clean water" => "bi-droplet-fill",
+                    "disaster" or "emergency" or "flood" => "bi-life-preserver",
+                    "poverty" or "hunger" or "food" => "bi-cup-hot-fill",
+                    _ => "bi-heart-fill"
+                };
+
+                var shortDesc = !string.IsNullOrWhiteSpace(cause.Description) && cause.Description.Length > 110
+                    ? cause.Description.Substring(0, 110).TrimEnd() + "..."
+                    : (cause.Description ?? "Supporting critical humanitarian relief across Pakistan.");
+
+                <div class="col-12 col-md-6 col-xl-3 d-flex cause-grid-item" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="@(string.IsNullOrEmpty(cause.ImageUrl) ? "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=600&auto=format&fit=crop&q=80" : cause.ImageUrl)" 
+                                 class="card-img-top" alt="@cause.Title" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi @catIcon text-success me-1"></i> @cause.Category
+                                </span>
+                                @if (cause.IsFeatured)
+                                {
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">@cause.Code</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a asp-controller="Donation" asp-action="Details" asp-route-id="@cause.Id" class="text-decoration-none text-dark">
+                                    @cause.Title
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                @shortDesc
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR @cause.RaisedAmount.ToString("N0")</span>
+                                    <span class="text-muted">Goal: PKR @cause.TargetAmount.ToString("N0")</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @percentage%;" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">@percentage% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a asp-controller="Donation" asp-action="Donate" asp-route-causeId="@cause.Id" class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a asp-controller="Donation" asp-action="Details" asp-route-id="@cause.Id" class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

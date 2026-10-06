@@ -1,0 +1,119 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.ViewModels.ProgrammeDetailsViewModel
+@{
+    ViewData["Title"] = Model.Programme.Title;
+}
+
+<!-- Hero Banner -->
+<div class="hero-wrapper py-4 py-md-5 position-relative">
+    <div class="hero-mesh-overlay"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-secondary text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Programmes" asp-action="Index" class="text-secondary text-decoration-none">Programmes</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">@Model.Programme.Title</li>
+            </ol>
+        </nav>
+        <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill mb-2 fw-bold">@Model.Programme.Category</span>
+        <h1 class="display-5 fw-bolder mb-2 text-dark">@Model.Programme.Title</h1>
+        <p class="lead text-secondary mb-0 fs-6 text-secondary"><i class="bi bi-geo-alt-fill text-danger me-1"></i> @Model.Programme.Location</p>
+    </div>
+</div>
+
+<div class="container my-4 my-md-5">
+    <div class="row g-4 g-lg-5">
+        <!-- Main Content Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm overflow-hidden mb-4 rounded-4">
+                <img src="@(string.IsNullOrEmpty(Model.Programme.ImageUrl) ? "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1000&auto=format&fit=crop&q=80" : Model.Programme.ImageUrl)" 
+                     class="w-100" style="max-height: 420px; object-fit: cover;" alt="@Model.Programme.Title">
+                
+                <div class="card-body p-3 p-sm-4 p-md-5">
+                    <h4 class="fw-bold mb-3 text-primary">About This Welfare Programme</h4>
+                    <p class="text-muted fs-6" style="white-space: pre-line; line-height: 1.8;">@Model.Programme.Description</p>
+
+                    <div class="row g-3 my-4">
+                        <div class="col-sm-6">
+                            <div class="p-3.5 border rounded-3 bg-light">
+                                <small class="text-muted text-uppercase fw-bold d-block mb-1"><i class="bi bi-calendar-range text-primary me-1"></i> Timeline Schedule</small>
+                                <strong class="fs-6 text-dark">@Model.Programme.StartDate.ToString("dd MMM yyyy")</strong> to <strong class="fs-6 text-dark">@Model.Programme.EndDate.ToString("dd MMM yyyy")</strong>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3.5 border rounded-3 bg-light">
+                                <small class="text-muted text-uppercase fw-bold d-block mb-1"><i class="bi bi-people-fill text-success me-1"></i> Target Capacity</small>
+                                <strong class="fs-6 text-dark">Up to @Model.Programme.Capacity Participants / Volunteers</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Programme.NGO != null)
+                    {
+                        <div class="card bg-light border-0 p-3 p-sm-4 mt-4 rounded-3">
+                            <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+                                <img src="@(string.IsNullOrEmpty(Model.Programme.NGO.LogoUrl) ? "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&auto=format&fit=crop&q=80" : Model.Programme.NGO.LogoUrl)" 
+                                     class="rounded-circle shadow-sm border bg-white p-1 flex-shrink-0" style="width: 70px; height: 70px; object-fit: cover;" alt="@Model.Programme.NGO.Name">
+                                <div>
+                                    <small class="text-muted text-uppercase fw-bold">Executing Partner NGO</small>
+                                    <h5 class="fw-bold mb-1 text-primary">@Model.Programme.NGO.Name</h5>
+                                    <p class="small text-muted mb-0"><i class="bi bi-geo-alt me-1"></i> @Model.Programme.NGO.City, @Model.Programme.NGO.Country &nbsp;|&nbsp; <i class="bi bi-telephone me-1"></i> @Model.Programme.NGO.Phone</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Express Interest Form -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-3 p-sm-4 sticky-lg-top rounded-4" style="top: 90px;">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-warning text-dark fw-bold"><i class="bi bi-hand-thumbs-up-fill me-1"></i> Volunteer / Donor</span>
+                </div>
+                <h4 class="fw-bold mb-1 text-dark">Express Your Interest</h4>
+                <p class="text-muted small mb-4">Register as a volunteer, donor, or supporter for this specific field drive.</p>
+
+                <form asp-controller="Programmes" asp-action="ExpressInterest" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="InterestForm.ProgrammeId" />
+
+                    <div class="mb-3">
+                        <label asp-for="InterestForm.FullName" class="form-label fw-semibold"></label>
+                        <input asp-for="InterestForm.FullName" class="form-control" placeholder="Your Full Name" />
+                        <span asp-validation-for="InterestForm.FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="InterestForm.Email" class="form-label fw-semibold"></label>
+                        <input asp-for="InterestForm.Email" class="form-control" placeholder="your.email@example.com" />
+                        <span asp-validation-for="InterestForm.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="InterestForm.Phone" class="form-label fw-semibold"></label>
+                        <input asp-for="InterestForm.Phone" class="form-control" placeholder="03XXXXXXXXX" />
+                        <span asp-validation-for="InterestForm.Phone" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="InterestForm.Notes" class="form-label fw-semibold"></label>
+                        <textarea asp-for="InterestForm.Notes" class="form-control" rows="3" placeholder="Tell us how you'd like to participate or any special medical/relief skills"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 fw-bold py-3 text-dark shadow-sm btn-pulse">
+                        <i class="bi bi-check2-circle me-1"></i> Confirm My Interest!
+                    </button>
+                </form>
+
+                <div class="alert alert-info py-2 small mt-4 mb-0 rounded-3">
+                    <i class="bi bi-envelope-check me-1"></i> You will receive an instant email acknowledgement once registered.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,259 @@
+/* ==========================================================================
+   Give-AID — Cinematic Frame-Sequence Hero
+   Full-viewport pinned canvas (primary visual). Donation card is NOT here.
+   ========================================================================== */
+
+.cinematic-sequence {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    background: #0a1628;
+    color: #f8fafc;
+}
+
+.cinematic-sequence__stage {
+    position: relative;
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 420px;
+    overflow: hidden;
+    background: #0a1628;
+}
+
+.cinematic-sequence__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 1;
+    background: #0a1628;
+}
+
+/* Very light vignette — frames stay dominant */
+.cinematic-sequence__veil {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(6, 14, 28, 0.35) 0%, transparent 28%, transparent 68%, rgba(6, 14, 28, 0.45) 100%);
+}
+
+/* Minimal safe-area copy — bottom-left, does not cover the visual subject */
+.cinematic-sequence__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: clamp(5rem, 12vh, 7rem) clamp(1.25rem, 4vw, 3rem) clamp(3.5rem, 8vh, 5rem);
+    pointer-events: none;
+}
+
+.cinematic-sequence__copy {
+    max-width: min(28rem, 92vw);
+    pointer-events: auto;
+}
+
+.cinematic-sequence__brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+}
+
+.cinematic-sequence__title {
+    font-size: clamp(1.35rem, 2.8vw, 2.15rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #ffffff !important;
+    margin-bottom: 0.55rem;
+    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55);
+}
+
+.cinematic-sequence__title span {
+    color: #6ee7b7 !important;
+}
+
+.cinematic-sequence__lead {
+    font-size: clamp(0.85rem, 1.2vw, 0.98rem);
+    color: rgba(248, 250, 252, 0.92) !important;
+    max-width: 24rem;
+    margin-bottom: 0.85rem;
+    line-height: 1.45;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+}
+
+.cinematic-sequence__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.cinematic-sequence__actions .btn {
+    pointer-events: auto;
+    font-size: 0.92rem;
+    padding: 0.55rem 1.15rem;
+}
+
+.cinematic-sequence__scroll-hint {
+    position: absolute;
+    bottom: clamp(1rem, 3vh, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    color: rgba(248, 250, 252, 0.75);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.cinematic-sequence__scroll-hint.is-hidden {
+    opacity: 0;
+}
+
+.cinematic-sequence__scroll-hint .hint-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent);
+    animation: cinematicHintPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes cinematicHintPulse {
+    0%, 100% { opacity: 0.35; transform: scaleY(0.85); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+}
+
+/* Loading state */
+.cinematic-sequence__loading {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    background: rgba(8, 16, 32, 0.72);
+    backdrop-filter: blur(6px);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.cinematic-sequence__loading.is-done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.cinematic-sequence__loading[hidden] {
+    display: none !important;
+}
+
+.cinematic-sequence__loading-label {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: rgba(226, 232, 240, 0.9);
+}
+
+.cinematic-sequence__loading-track {
+    width: min(220px, 55vw);
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+}
+
+.cinematic-sequence__loading-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #34d399, #fbbf24);
+    transition: width 0.2s ease;
+}
+
+.cinematic-sequence.is-loading .cinematic-sequence__scroll-hint {
+    opacity: 0;
+}
+
+/* Reduced motion: static hero, no pin feel */
+.cinematic-sequence.is-reduced-motion .cinematic-sequence__scroll-hint {
+    display: none;
+}
+
+.cinematic-sequence.is-reduced-motion .cinematic-sequence__stage {
+    height: auto;
+    min-height: min(100vh, 720px);
+}
+
+/* ---------- Donation section AFTER cinematic ---------- */
+.donation-after-cinematic {
+    min-height: 0;
+    padding: clamp(2.5rem, 5vw, 4rem) 0;
+}
+
+.donation-after-cinematic [data-donation-entrance] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.donation-after-cinematic [data-donation-entrance].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .donation-after-cinematic [data-donation-entrance] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .cinematic-sequence__scroll-hint .hint-line {
+        animation: none;
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767.98px) {
+    .cinematic-sequence__stage {
+        min-height: 100svh;
+        height: 100svh;
+    }
+
+    .cinematic-sequence__overlay {
+        padding: 5rem 1rem 4.25rem;
+    }
+
+    .cinematic-sequence__title {
+        font-size: clamp(1.25rem, 5.5vw, 1.65rem);
+    }
+
+    .cinematic-sequence__scroll-hint {
+        bottom: 1rem;
+    }
+}
+
+@media (max-width: 424.98px) {
+    .cinematic-sequence__brand {
+        letter-spacing: 0.12em;
+        font-size: 0.78rem;
+    }
+}

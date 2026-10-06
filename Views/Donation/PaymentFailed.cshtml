@@ -1,0 +1,38 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.Donation
+@{
+    ViewData["Title"] = "Payment Incomplete";
+    var failureReason = ViewBag.FailureReason as string ?? "Payment authorization was declined.";
+}
+
+<div class="container py-5 my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-lg p-4 p-md-5 text-center">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-danger text-white rounded-circle shadow" style="width: 80px; height: 80px;">
+                        <i class="bi bi-x-lg fs-1"></i>
+                    </div>
+                </div>
+
+                <span class="badge bg-danger-subtle text-danger px-3 py-1 rounded-pill mb-2 fw-bold align-self-center">Payment Declined</span>
+                <h2 class="fw-bold mb-2">We Couldn't Complete Your Donation</h2>
+                <p class="text-muted mb-4">
+                    Your financial institution or wallet provider declined the transaction. No funds were debited.
+                </p>
+
+                <div class="alert alert-warning text-start p-3 mb-4">
+                    <strong><i class="bi bi-exclamation-circle-fill me-1"></i> Reason:</strong> @failureReason
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a asp-controller="Donation" asp-action="Donate" asp-route-causeId="@Model?.CauseId" class="btn btn-warning px-4 fw-bold text-dark">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Retry with Another Payment Method
+                    </a>
+                    <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-headset me-1"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

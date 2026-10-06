@@ -1,0 +1,67 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.NGO>
+@{
+    ViewData["Title"] = "Participating Certified Partner NGOs";
+}
+
+<!-- Hero Banner -->
+<div class="hero-wrapper py-4 py-md-5 text-center position-relative">
+    <div class="hero-mesh-overlay"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill mb-2 fw-bold">
+            <i class="bi bi-buildings-fill text-dark me-1"></i> Certified Welfare Network
+        </span>
+        <h1 class="display-5 fw-bolder mb-2 text-dark">Vetted Grassroots NGOs</h1>
+        <p class="lead text-secondary max-w-2xl mx-auto mb-0 fs-6">
+            Meet the registered non-profit welfare organizations executing audited, transparent initiatives across Pakistan.
+        </p>
+    </div>
+</div>
+
+<div class="container my-4 my-md-5">
+    <!-- Partner NGOs Grid (Desktop: 4, Tablet: 2, Mobile: 1) -->
+    <div class="card-grid-responsive">
+        @foreach (var ngo in Model)
+        {
+            <div class="d-flex" data-aos="fade-up">
+                <div class="card h-100 w-100 card-hover border-0 shadow-sm p-3.5 rounded-4 d-flex flex-column text-center ngo-card">
+                    <div class="mb-3">
+                        <img src="@(string.IsNullOrEmpty(ngo.LogoUrl) ? "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=300&auto=format&fit=crop&q=80" : ngo.LogoUrl)" 
+                             class="rounded-circle shadow-sm border p-1 bg-white mx-auto d-block" style="width: 72px; height: 72px; object-fit: cover;" alt="@ngo.Name" loading="lazy">
+                    </div>
+                    
+                    <div class="mb-2">
+                        <span class="badge bg-success-subtle text-success fw-bold px-2.5 py-1 rounded-pill mb-1">
+                            <i class="bi bi-patch-check-fill me-1"></i> Verified Partner
+                        </span>
+                        <h5 class="fw-bold mb-1 text-primary">@ngo.Name</h5>
+                        <small class="text-muted d-block">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> @ngo.City, @ngo.Country
+                        </small>
+                        <small class="text-muted d-block">Est. @ngo.EstablishedYear</small>
+                    </div>
+
+                    <p class="small text-muted mb-3 flex-grow-1">
+                        @ngo.Description
+                    </p>
+
+                    <div class="mt-auto pt-2 border-top">
+                        <div class="small text-muted mb-2">
+                            <span class="badge bg-light text-dark border">@(ngo.Programmes?.Count ?? 0) Active Programmes</span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a asp-controller="Ngos" asp-action="Details" asp-route-id="@ngo.Id" class="btn btn-sm btn-primary fw-bold">
+                                View Profile & Activities
+                            </a>
+                            @if (!string.IsNullOrEmpty(ngo.Website))
+                            {
+                                <a href="@ngo.Website" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-globe me-1"></i> Visit Website
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

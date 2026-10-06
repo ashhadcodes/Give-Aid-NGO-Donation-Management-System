@@ -1,0 +1,119 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.Donation>
+@{
+    ViewData["Title"] = "My Donations & Tax Receipts";
+}
+
+<div class="container py-4 py-md-5">
+    <div class="row g-4">
+        <!-- Sidebar Navigation -->
+        <partial name="_AccountNavPartial" />
+
+        <!-- Donations List Content -->
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm p-3 p-sm-4 p-md-5">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4">
+                    <div>
+                        <h3 class="fw-bold mb-1 text-primary">My Donation History</h3>
+                        <p class="text-muted small mb-0">Official record of all contributions made to Give-AID verified causes.</p>
+                    </div>
+                    <a asp-controller="Donation" asp-action="Donate" class="btn btn-warning btn-sm fw-bold text-dark flex-shrink-0">
+                        <i class="bi bi-plus-circle me-1"></i> Make New Donation
+                    </a>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center py-5">
+                        <i class="bi bi-receipt fs-1 text-muted d-block mb-3"></i>
+                        <h5>No donation records found.</h5>
+                        <p class="text-muted small">You haven't made any donations yet. Explore causes to start your journey.</p>
+                        <a asp-controller="Donation" asp-action="Index" class="btn btn-primary">Browse Causes</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Receipt / ID</th>
+                                    <th>Cause</th>
+                                    <th>Amount</th>
+                                    <th>Payment Channel</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <code>@(d.Receipt?.ReceiptNumber ?? $"#DON-{d.Id:D6}")</code>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-primary">@(d.Cause?.Title ?? "General Welfare Fund")</div>
+                                            <small class="text-muted">@(d.Cause?.Category ?? "Welfare")</small>
+                                        </td>
+                                        <td class="fw-bold text-success">@d.Currency @d.Amount.ToString("N0")</td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border">@d.PaymentMethod</span>
+                                        </td>
+                                        <td class="text-muted small">@d.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            @if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid)
+                                            {
+                                                <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i> Paid & Verified</span>
+                                            }
+                                            else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+                                            {
+                                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i> Pending Verification</span>
+                                            }
+                                            else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Failed)
+                                            {
+                                                <span class="badge bg-danger"><i class="bi bi-x-circle-fill me-1"></i> Rejected</span>
+                                            }
+                                            else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Refunded)
+                                            {
+                                                <span class="badge bg-secondary"><i class="bi bi-arrow-counterclockwise me-1"></i> Refunded</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">@d.Status</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            @if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid)
+                                            {
+                                                <a asp-controller="Donation" asp-action="Receipt" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary" title="View & Print Official Receipt">
+                                                    <i class="bi bi-receipt me-1"></i> Receipt
+                                                </a>
+                                            }
+                                            else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+                                            {
+                                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle small py-1.5 px-2">
+                                                    <i class="bi bi-clock-history me-1"></i> Verification Pending
+                                                </span>
+                                            }
+                                            else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Failed)
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle small py-1.5 px-2">
+                                                    <i class="bi bi-x-circle me-1"></i> Verification Rejected
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary-subtle text-secondary small py-1.5 px-2">@d.Status</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

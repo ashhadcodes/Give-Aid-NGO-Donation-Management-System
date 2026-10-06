@@ -1,0 +1,97 @@
+@model Give_Aid_NGO_Donation_Management_System.Areas.Admin.ViewModels.GalleryFormViewModel
+@{
+    ViewData["Title"] = "Upload Gallery Photo";
+}
+
+<div class="mb-4">
+    <a asp-area="Admin" asp-controller="Gallery" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Gallery
+    </a>
+    <h2 class="fw-bold mb-1">Upload Gallery Photo</h2>
+    <p class="text-muted small">Upload or link high-resolution photos of projects and events.</p>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm p-3 p-sm-4">
+            <form asp-area="Admin" asp-controller="Gallery" asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="Title" class="form-label fw-semibold"></label>
+                        <input asp-for="Title" class="form-control" placeholder="e.g. Free Eye Checkup Camp in Thar" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Category" class="form-label fw-semibold"></label>
+                        <select asp-for="Category" class="form-select">
+                            <option value="General">General</option>
+                            <option value="Disaster Relief">Disaster Relief</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Education">Education</option>
+                            <option value="Water Infrastructure">Water Infrastructure</option>
+                            <option value="Community Outreach">Community Outreach</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ProgrammeId" class="form-label fw-semibold"></label>
+                        <select asp-for="ProgrammeId" class="form-select">
+                            <option value="">-- None / General Event --</option>
+                            @if (Model.AvailableProgrammes != null)
+                            {
+                                @foreach (var prog in Model.AvailableProgrammes)
+                                {
+                                    <option value="@prog.Id">@prog.Title</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="ProgrammeId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Brief caption describing the photo..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ImageFile" class="form-label fw-semibold"></label>
+                        <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ImageUrl" class="form-label fw-semibold">Or Image URL</label>
+                        <input asp-for="ImageUrl" class="form-control" placeholder="https://images.unsplash.com/..." />
+                        <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="DisplayOrder" class="form-label fw-semibold">Display Priority</label>
+                        <input asp-for="DisplayOrder" type="number" class="form-control" value="0" />
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-center mt-4">
+                        <div class="form-check form-switch">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" checked />
+                            <label asp-for="IsActive" class="form-check-label fw-semibold">Is Active</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4"><div class="admin-form-actions"><button type="submit" class="btn btn-primary px-4 fw-bold">
+                            <i class="bi bi-cloud-upload me-1"></i> Upload Image
+                        </button><a asp-area="Admin" asp-controller="Gallery" asp-action="Index" class="btn btn-outline-secondary">Cancel</a></div></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

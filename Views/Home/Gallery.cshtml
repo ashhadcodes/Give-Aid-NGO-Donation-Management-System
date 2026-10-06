@@ -1,0 +1,93 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.GalleryItem>
+@{
+    ViewData["Title"] = "Moments of Impact - Photo & Field Gallery";
+    var selectedCategory = ViewBag.SelectedCategory as string ?? "All";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+}
+
+<!-- Hero Banner -->
+<div class="hero-wrapper py-4 py-md-5 text-center position-relative">
+    <div class="hero-mesh-overlay"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill mb-2 fw-bold">
+            <i class="bi bi-camera-fill text-dark me-1"></i> Field Transparency
+        </span>
+        <h1 class="display-5 fw-bolder mb-2 text-dark">Moments of Hope & Impact</h1>
+        <p class="lead text-secondary max-w-2xl mx-auto mb-0 fs-6">
+            A visual documentation of relief operations, flood rehabilitation camps, school openings, and healthcare drives.
+        </p>
+    </div>
+</div>
+
+<div class="container my-4 my-md-5">
+    <!-- Category Filter Buttons -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4 mb-md-5">
+        <button class="btn btn-sm btn-primary gallery-filter-btn active rounded-pill px-3.5" data-filter="all">
+            All Photos
+        </button>
+        @foreach (var cat in categories)
+        {
+            <button class="btn btn-sm btn-outline-secondary gallery-filter-btn rounded-pill px-3.5" data-filter="@cat">
+                @cat
+            </button>
+        }
+    </div>
+
+    <!-- Gallery Grid with Lightbox Modal Triggers (Desktop: 4, Tablet: 2, Mobile: 1) -->
+    <div class="card-grid-responsive" id="galleryContainer">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5" style="grid-column: 1 / -1;">
+                <i class="bi bi-images fs-1 text-muted"></i>
+                <p class="text-muted mt-2">No photos found in this category.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="gallery-card-item" data-category="@item.Category">
+                    <div class="card border-0 shadow-sm h-100 card-hover rounded-4 gallery-card">
+                        <div class="position-relative gallery-card-img-wrapper ratio ratio-16x9" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#galleryModal-@item.Id">
+                            <img src="@item.ImageUrl" class="object-fit-cover" alt="@item.Title" loading="lazy">
+                            <span class="position-absolute top-0 start-0 m-2.5 badge bg-dark bg-opacity-75 text-white backdrop-blur">
+                                @item.Category
+                            </span>
+                            <div class="position-absolute bottom-0 end-0 m-2.5">
+                                <span class="badge bg-white text-dark shadow-sm"><i class="bi bi-arrows-fullscreen"></i></span>
+                            </div>
+                        </div>
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold mb-1">@item.Title</h6>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="small text-muted mb-2">@item.Description</p>
+                            }
+                            @if (item.Programme != null)
+                            {
+                                <span class="badge bg-primary-subtle text-primary fw-semibold"><i class="bi bi-link-45deg"></i> @item.Programme.Title</span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Lightbox Modal -->
+                    <div class="modal fade" id="galleryModal-@item.Id" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 rounded-4 overflow-hidden bg-dark text-white">
+                                <div class="modal-body p-0 position-relative">
+                                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <img src="@item.ImageUrl" class="w-100" style="max-height: 75vh; object-fit: contain;" alt="@item.Title">
+                                    <div class="p-3 p-sm-4 bg-dark">
+                                        <span class="badge bg-warning text-dark mb-2">@item.Category</span>
+                                        <h5 class="fw-bold mb-1">@item.Title</h5>
+                                        <p class="text-white-50 small mb-0">@(string.IsNullOrEmpty(item.Description) ? "Field relief expedition photo." : item.Description)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

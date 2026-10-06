@@ -1,0 +1,122 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.Donation
+@{
+    bool isPaid = Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid;
+    ViewData["Title"] = isPaid ? "Donation Successful" : "Donation Submitted - Verification Pending";
+    var lastTxn = Model.PaymentTransactions.LastOrDefault();
+}
+
+<div class="container py-4 py-md-5 my-2 my-md-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-lg p-3 p-sm-4 p-md-5 text-center rounded-4">
+                <div class="mb-4">
+                    @if (isPaid)
+                    {
+                        <div class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle shadow" style="width: 80px; height: 80px;">
+                            <i class="bi bi-check-lg fs-1"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-inline-flex align-items-center justify-content-center bg-warning text-dark rounded-circle shadow" style="width: 80px; height: 80px;">
+                            <i class="bi bi-hourglass-split fs-1"></i>
+                        </div>
+                    }
+                </div>
+
+                @if (isPaid)
+                {
+                    <span class="badge bg-success-subtle text-success px-3 py-1.5 rounded-pill mb-2 fw-bold align-self-center">
+                        <i class="bi bi-patch-check-fill me-1"></i> Transaction Complete & Verified
+                    </span>
+                    <h2 class="fw-bold mb-2">Thank You, @(Model.Anonymous ? "Generous Donor" : Model.DonorName)!</h2>
+                    <p class="text-muted mb-4">
+                        Your generous contribution of <strong class="text-success fs-5">@Model.Currency @Model.Amount.ToString("N2")</strong> for <strong>@Model.Cause?.Title</strong> has been successfully received and allocated.
+                    </p>
+                }
+                else
+                {
+                    <span class="badge bg-warning-subtle text-warning px-3 py-1.5 rounded-pill mb-2 fw-bold align-self-center">
+                        <i class="bi bi-shield-exclamation me-1"></i> Manual Payment Verification Pending
+                    </span>
+                    <h2 class="fw-bold mb-2">Thank You, @(Model.Anonymous ? "Generous Donor" : Model.DonorName)!</h2>
+                    <p class="text-muted mb-4">
+                        Your manual donation submission of <strong class="text-warning fs-5">@Model.Currency @Model.Amount.ToString("N2")</strong> for <strong>@Model.Cause?.Title</strong> has been safely recorded. Our finance verification desk is reviewing your bank deposit details.
+                    </p>
+                }
+
+                <div class="p-3 p-sm-4 rounded-3 text-start mb-4 border" style="background: var(--bg-surface-elevated);">
+                    <div class="row g-2 small">
+                        <div class="col-sm-6 col-12 text-muted">Donation ID:</div>
+                        <div class="col-sm-6 col-12 text-sm-end fw-bold">#@Model.Id</div>
+                        
+                        <div class="col-sm-6 col-12 text-muted">Transaction Date:</div>
+                        <div class="col-sm-6 col-12 text-sm-end fw-bold">@Model.CreatedAt.ToString("dd MMM yyyy, HH:mm") UTC</div>
+
+                        <div class="col-sm-6 col-12 text-muted">Payment Channel:</div>
+                        <div class="col-sm-6 col-12 text-sm-end fw-bold">@Model.PaymentMethod</div>
+                        
+                        @if (!string.IsNullOrEmpty(lastTxn?.GatewayTransactionId))
+                        {
+                            <div class="col-sm-6 col-12 text-muted">Reference / Slip No:</div>
+                            <div class="col-sm-6 col-12 text-sm-end fw-bold font-monospace">@lastTxn.GatewayTransactionId</div>
+                        }
+
+                        <div class="col-sm-6 col-12 text-muted">Allocated Cause:</div>
+                        <div class="col-sm-6 col-12 text-sm-end fw-bold">@(Model.Cause?.Title ?? "General Welfare")</div>
+
+                        <div class="col-sm-6 col-12 text-muted">Current Status:</div>
+                        <div class="col-sm-6 col-12 text-sm-end">
+                            @if (isPaid)
+                            {
+                                <span class="badge bg-success">Paid & Verified</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Under Review</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @if (!isPaid)
+                {
+                    <div class="alert alert-warning py-2 px-3 small text-start mb-4">
+                        <i class="bi bi-info-circle-fill me-1"></i>
+                        <strong>What happens next?</strong> Our finance department verifies bank deposits during operational hours (typically within 1-2 hours). As soon as the transaction is confirmed, your status will update to <strong>Paid</strong> and an official digital tax receipt with cryptographic signature will be dispatched to <strong>@Model.DonorEmail</strong>.
+                    </div>
+                }
+
+                <div class="d-flex flex-wrap justify-content-center gap-2 gap-sm-3">
+                    @if (isPaid)
+                    {
+                        <a asp-controller="Donation" asp-action="Receipt" asp-route-id="@Model.Id" class="btn btn-primary px-4 fw-bold">
+                            <i class="bi bi-receipt me-1"></i> View Official Receipt
+                        </a>
+                    }
+                    <a asp-controller="Account" asp-action="MyDonations" class="btn btn-outline-primary px-4 fw-semibold">
+                        <i class="bi bi-clock-history me-1"></i> My Donations History
+                    </a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4">
+                        Return Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @if (isPaid)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                if (typeof triggerConfetti === "function") {
+                    triggerConfetti();
+                    setTimeout(triggerConfetti, 600);
+                }
+            });
+        </script>
+    }
+}
+

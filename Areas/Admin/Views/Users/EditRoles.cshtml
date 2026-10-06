@@ -1,0 +1,65 @@
+@model Give_Aid_NGO_Donation_Management_System.Areas.Admin.ViewModels.EditUserRolesViewModel
+@{
+    ViewData["Title"] = $"Manage Security Roles: {Model.FullName}";
+}
+
+<div class="mb-4">
+    <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Users
+    </a>
+    <h2 class="fw-bold mb-1">Manage Roles: @Model.FullName</h2>
+    <p class="text-muted small">Update role authorizations and administrative access privileges for <strong>@Model.Email</strong>.</p>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm p-3 p-sm-4">
+            <form asp-area="Admin" asp-controller="Users" asp-action="EditRoles" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="FullName" />
+                <input type="hidden" asp-for="Email" />
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Select User Roles</label>
+                    <div class="list-group">
+                        @foreach (var role in Model.AllRoles)
+                        {
+                            var isChecked = Model.AssignedRoles.Contains(role);
+                            <label class="list-group-item d-flex gap-2 gap-sm-3 align-items-start cursor-pointer">
+                                <input class="form-check-input flex-shrink-0 mt-1" type="checkbox" name="selectedRoles" value="@role" checked="@isChecked" />
+                                <div class="min-w-0">
+                                    <strong class="d-block">@role</strong>
+                                    <small class="text-muted">
+                                        @switch (role)
+                                        {
+                                            case "SuperAdmin":
+                                                <span>Full access to all modules, role manager, financial audit logs, and settings.</span>
+                                                break;
+                                            case "Admin":
+                                                <span>Operational access to manage donations, causes, programmes, NGOs, and CMS content.</span>
+                                                break;
+                                            case "User":
+                                                <span>Standard donor role with personal profile, donation history, and queries.</span>
+                                                break;
+                                            default:
+                                                <span>System defined role.</span>
+                                                break;
+                                        }
+                                    </small>
+                                </div>
+                            </label>
+                        }
+                    </div>
+                </div>
+
+                <div class="admin-form-actions">
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        <i class="bi bi-check-circle me-1"></i> Update Roles
+                    </button>
+                    <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,142 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.ViewModels.ProgrammeListViewModel
+@{
+    ViewData["Title"] = "Welfare Programmes & Volunteer Drives";
+}
+
+<!-- Hero Banner (Crisp Light Theme Atmosphere) -->
+<div class="hero-wrapper py-4 py-md-5 position-relative">
+    <div class="hero-mesh-overlay"></div>
+    <div class="container position-relative text-center" style="z-index: 2;">
+        <span class="badge bg-success-subtle text-success px-3 py-1.5 rounded-pill mb-2 fw-bold">
+            <i class="bi bi-calendar-check-fill me-1"></i> Field Interventions
+        </span>
+        <h1 class="display-5 fw-bolder mb-2 text-dark">Welfare Programmes & Drives</h1>
+        <p class="lead text-secondary max-w-2xl mx-auto mb-0 fs-6">
+            Join scheduled relief missions, medical screening camps, nutritional distributions, and vocational workshops across Pakistan.
+        </p>
+    </div>
+</div>
+
+<div class="container my-4 my-md-5">
+    <!-- Filter and Search Bar -->
+    <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4 mb-lg-5 rounded-4" data-aos="fade-up">
+        <form method="get" asp-controller="Programmes" asp-action="Index" class="row g-2 g-md-3 align-items-center">
+            <div class="col-lg-5 col-md-5 col-12">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@Model.SearchTerm" class="form-control border-start-0" placeholder="Search programmes by title or city..." />
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                <select name="category" class="form-select">
+                    <option value="All" selected="@(Model.SelectedCategory == "All")">All Welfare Sectors</option>
+                    @foreach (var cat in Model.AvailableCategories)
+                    {
+                        <option value="@cat" selected="@(Model.SelectedCategory == cat)">@cat</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold"><i class="bi bi-funnel-fill me-1"></i> Filter</button>
+                <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Programmes Grid: Desktop >= 1200px (4), Tablet 768-1199 (2), Mobile < 768 (1) -->
+    <div class="card-grid-responsive" id="programmesGrid">
+        @if (!Model.Programmes.Any())
+        {
+            <div class="text-center py-5" style="grid-column: 1 / -1;">
+                <div class="p-4 p-md-5 rounded-4 bg-light border">
+                    <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3"></i>
+                    <h4 class="fw-bold text-dark">No welfare programmes matched your filters.</h4>
+                    <p class="text-secondary small mb-3">Try different search terms or clear the filter to browse all upcoming operations.</p>
+                    <a asp-controller="Programmes" asp-action="Index" class="btn btn-primary fw-semibold">Clear Filters</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var prog in Model.Programmes)
+            {
+                var catIcon = prog.Category?.ToLowerInvariant() switch
+                {
+                    "education" or "literacy" or "school" => "bi-mortarboard-fill",
+                    "healthcare" or "health care" or "medical" => "bi-hospital-fill",
+                    "privileged children" or "children welfare" or "children" or "child" => "bi-person-heart",
+                    "specially challenged children" or "specially challenged" or "special needs" => "bi-shield-heart",
+                    "food & nutrition" or "food relief" or "food" => "bi-cup-hot-fill",
+                    "disaster relief" or "flood" or "emergency" => "bi-life-preserver",
+                    _ => "bi-calendar-event-fill"
+                };
+
+                var shortDesc = !string.IsNullOrWhiteSpace(prog.Description) && prog.Description.Length > 110
+                    ? prog.Description.Substring(0, 110).TrimEnd() + "..."
+                    : (prog.Description ?? "Volunteer-driven humanitarian initiative.");
+
+                <div class="program-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 program-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="@(string.IsNullOrEmpty(prog.ImageUrl) ? "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&auto=format&fit=crop&q=80" : prog.ImageUrl)" 
+                                 class="card-img-top" alt="@prog.Title" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi @catIcon text-primary me-1"></i> @prog.Category
+                                </span>
+                                @if (prog.IsFeatured)
+                                {
+                                    <span class="badge bg-warning text-dark px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-star-fill text-danger me-1"></i> Featured
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Capacity Metadata -->
+                            <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> @prog.Location</span>
+                                <span class="badge bg-light text-secondary border">Cap: @prog.Capacity</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a asp-controller="Programmes" asp-action="Details" asp-route-id="@prog.Id" class="text-decoration-none text-dark">
+                                    @prog.Title
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (natural text wrap) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                @shortDesc
+                            </p>
+                            
+                            <!-- Timeline Schedule Box -->
+                            <div class="p-2 rounded-3 small mb-3 border bg-light">
+                                <i class="bi bi-calendar-range text-primary me-1"></i>
+                                <span class="text-secondary">@prog.StartDate.ToString("dd MMM yyyy") - @prog.EndDate.ToString("dd MMM yyyy")</span>
+                            </div>
+
+                            @if (prog.NGO != null)
+                            {
+                                <div class="small text-muted mb-3 d-flex align-items-center gap-1">
+                                    <i class="bi bi-building text-secondary"></i>
+                                    <span class="text-truncate">By: <strong class="text-primary">@prog.NGO.Name</strong></span>
+                                </div>
+                            }
+
+                            <!-- CTA Button -->
+                            <a asp-controller="Programmes" asp-action="Details" asp-route-id="@prog.Id" class="btn btn-outline-primary w-100 fw-bold py-2 btn-sm mt-auto d-inline-flex align-items-center justify-content-center gap-1">
+                                <span>View Details & Register</span>
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

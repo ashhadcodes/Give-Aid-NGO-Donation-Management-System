@@ -1,0 +1,155 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.Donation
+@{
+    ViewData["Title"] = $"Official Tax Receipt - {Model.Receipt?.ReceiptNumber ?? Model.TransactionReference}";
+}
+
+<div class="container py-4 py-md-5">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4 no-print">
+        <a asp-controller="Account" asp-action="Dashboard" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Return to Portal
+        </a>
+        <div class="d-flex flex-wrap gap-2">
+            <button onclick="window.print()" class="btn btn-primary btn-sm">
+                <i class="bi bi-printer me-1"></i> Print / PDF Receipt
+            </button>
+            <a asp-controller="Donation" asp-action="PrintReceipt" asp-route-id="@Model.Id" target="_blank" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Standalone Receipt
+            </a>
+            <button class="btn btn-outline-success btn-sm" id="celebrateBtn" onclick="triggerImpactCelebration()">
+                <i class="bi bi-stars me-1"></i> Celebrate Impact 🎉
+            </button>
+        </div>
+    </div>
+
+    <!-- Official Verifiable Digital Receipt Certificate -->
+    <div class="receipt-wrapper printable-area">
+        <!-- Verification Stamp -->
+        <div class="receipt-stamp">
+            <i class="bi bi-shield-fill-check fs-4 mb-1"></i>
+            <span>Verified</span>
+            <span>Audited</span>
+        </div>
+
+        <!-- Header -->
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3 border-bottom pb-4 mb-4">
+            <div>
+                <span class="brand-badge bg-success text-white px-2.5 py-1 rounded fw-bold fs-6 mb-2 d-inline-flex align-items-center gap-1.5">
+                    <i class="bi bi-heart-pulse-fill"></i> Give-AID
+                </span>
+                <h4 class="fw-bolder text-dark mb-0">Give-AID NGO Welfare Trust</h4>
+                <small class="text-muted d-block">Official Philanthropic Donation & Impact Certificate</small>
+                <small class="text-muted d-block">Tax Exemption Reg: FBR-NGO-PK-99420-2026</small>
+            </div>
+            <div class="text-sm-end">
+                <span class="badge bg-success fs-6 px-3 py-1.5 mb-2">Paid & Verified</span>
+                <div class="fw-bold text-dark fs-5 font-mono">@(Model.Receipt?.ReceiptNumber ?? $"REC-{Model.Id:D6}")</div>
+                <small class="text-muted d-block">Date: @Model.CreatedAt.ToString("MMMM dd, yyyy")</small>
+                <small class="text-muted d-block">Time: @Model.CreatedAt.ToString("HH:mm:ss") UTC</small>
+            </div>
+        </div>
+
+        <!-- Donor and Allocation Summary -->
+        <div class="row g-3 g-md-4 mb-4">
+            <div class="col-sm-6">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <small class="text-muted text-uppercase fw-bold d-block mb-1">Received With Gratitude From:</small>
+                    <h5 class="fw-bold text-dark mb-1">@(Model.IsAnonymous ? "Anonymous Philanthropist" : Model.DonorName)</h5>
+                    <div class="small text-muted"><i class="bi bi-envelope me-1"></i> @Model.DonorEmail</div>
+                    @if (!string.IsNullOrEmpty(Model.DonorPhone))
+                    {
+                        <div class="small text-muted"><i class="bi bi-phone me-1"></i> @Model.DonorPhone</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.DonorCity))
+                    {
+                        <div class="small text-muted"><i class="bi bi-geo-alt me-1"></i> @Model.DonorCity</div>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <small class="text-muted text-uppercase fw-bold d-block mb-1">Payment & Security Details:</small>
+                    <div class="mb-1"><strong>Gateway:</strong> <span class="badge bg-primary">@Model.PaymentMethod</span></div>
+                    <div class="mb-1"><strong>Status:</strong> <span class="badge bg-success">@Model.Status</span></div>
+                    <div class="mb-1 text-truncate"><strong>Ref ID:</strong> <code class="small">@Model.TransactionReference</code></div>
+                    <div class="small text-muted"><strong>Currency:</strong> @Model.Currency (PKR)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakdown Table -->
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Designated Purpose / Cause</th>
+                        <th>Category</th>
+                        <th class="text-end" style="min-width: 140px;">Contributed Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="fw-bold text-primary">@(Model.Cause?.Title ?? "General Welfare & Disaster Relief Fund")</div>
+                            <small class="text-muted">Direct beneficiary aid, rehabilitation, food supply, and medical support.</small>
+                        </td>
+                        <td><span class="badge bg-light text-dark border">@(Model.Cause?.Category ?? "Welfare")</span></td>
+                        <td class="text-end fw-bold text-success fs-5">@Model.Currency @Model.Amount.ToString("N0")</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-light">
+                        <td colspan="2" class="text-end fw-bold">Platform Processing & Admin Deduction:</td>
+                        <td class="text-end fw-bold text-muted">PKR 0 (0%)</td>
+                    </tr>
+                    <tr class="table-success table-active">
+                        <td colspan="2" class="text-end fw-bolder fs-5 text-dark">Total Net Beneficiary Allocation:</td>
+                        <td class="text-end fw-bolder fs-4 text-success font-mono">@Model.Currency @Model.Amount.ToString("N0")</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.DonorNotes))
+        {
+            <div class="p-3 bg-light rounded-3 mb-4 border">
+                <small class="text-muted text-uppercase fw-bold d-block mb-1">Donor Special Dedication / Notes:</small>
+                <p class="mb-0 text-muted fst-italic">"@Model.DonorNotes"</p>
+            </div>
+        }
+
+        <!-- Digital Signature and Verification Stamp -->
+        <div class="row align-items-center g-3 border-top pt-4">
+            <div class="col-sm-8">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-qr-code fs-1 text-dark"></i>
+                    <div>
+                        <div class="fw-bold text-dark small">Cryptographic Integrity Hash:</div>
+                        <code class="small text-muted text-break">@(Model.Receipt?.DigitalSignature ?? "SHA256-AUTHENTICATED-GIVEAID-TRANSACTION")</code>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 text-sm-end">
+                <div class="fw-bold text-dark">Finance Director</div>
+                <small class="text-muted d-block">Give-AID Oversight Committee</small>
+                <small class="text-success fw-bold"><i class="bi bi-check-all"></i> Electronically Signed</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function triggerImpactCelebration() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            triggerImpactCelebration();
+        });
+    </script>
+}

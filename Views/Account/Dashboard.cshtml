@@ -1,0 +1,175 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.ViewModels.UserDashboardViewModel
+@{
+    ViewData["Title"] = "Member Dashboard - Give-AID Portal";
+}
+
+<div class="container py-4 py-md-5">
+    <!-- Welcome Header Banner -->
+    <div class="card border-0 shadow-sm p-4 p-md-5 mb-4 rounded-4 user-welcome-banner">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-3">
+            <div>
+                <span class="badge bg-success-subtle text-success fw-bold px-3 py-1 rounded-pill mb-2">Verified Donor Portal</span>
+                <h2 class="fw-bold mb-1 text-dark">Welcome back, @(Model.User?.FullName ?? "Supporter")!</h2>
+                <p class="text-secondary small mb-0">Track your philanthropic contributions, impact milestones, and active welfare drives.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2 flex-shrink-0">
+                <a asp-controller="Donation" asp-action="Donate" class="btn btn-warning fw-bold text-dark btn-pulse">
+                    <i class="bi bi-heart-fill text-danger me-1"></i> New Donation
+                </a>
+                <a asp-controller="Account" asp-action="InviteFriend" class="btn btn-outline-primary">
+                    <i class="bi bi-person-plus me-1"></i> Invite Friend
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid (Desktop: 4, Tablet: 2, Mobile: 1) -->
+    <div class="admin-stat-grid mb-4">
+        <div class="card border-0 shadow-sm p-3 p-md-3.5 text-center h-100 tilt-card-3d">
+            <i class="bi bi-cash-stack fs-1 text-success mb-2 card-3d-depth-2"></i>
+            <h3 class="fw-bold mb-0 text-success card-3d-depth-1">PKR @Model.TotalDonatedAmount.ToString("N0")</h3>
+            <small class="text-muted text-uppercase fw-semibold card-3d-depth-1">Total Donated</small>
+        </div>
+        <div class="card border-0 shadow-sm p-3 p-md-3.5 text-center h-100 tilt-card-3d">
+            <i class="bi bi-receipt-cutoff fs-1 text-primary mb-2 card-3d-depth-2"></i>
+            <h3 class="fw-bold mb-0 text-primary card-3d-depth-1">@Model.TotalDonationsCount</h3>
+            <small class="text-muted text-uppercase fw-semibold card-3d-depth-1">Donations Made</small>
+        </div>
+        <div class="card border-0 shadow-sm p-3 p-md-3.5 text-center h-100 tilt-card-3d">
+            <i class="bi bi-calendar-check fs-1 text-warning mb-2 card-3d-depth-2"></i>
+            <h3 class="fw-bold mb-0 text-warning card-3d-depth-1">@Model.RegisteredProgrammesCount</h3>
+            <small class="text-muted text-uppercase fw-semibold card-3d-depth-1">Programmes Joined</small>
+        </div>
+        <div class="card border-0 shadow-sm p-3 p-md-3.5 text-center h-100 tilt-card-3d">
+            <i class="bi bi-envelope-paper-heart fs-1 text-info mb-2 card-3d-depth-2"></i>
+            <h3 class="fw-bold mb-0 text-info card-3d-depth-1">@Model.InvitationsSent.Count()</h3>
+            <small class="text-muted text-uppercase fw-semibold card-3d-depth-1">Invites Sent</small>
+        </div>
+    </div>
+
+    <!-- Main Content & Navigation Columns -->
+    <div class="row g-4">
+        <!-- Sidebar Navigation -->
+        <partial name="_AccountNavPartial" />
+
+        <!-- Dashboard Widgets -->
+        <div class="col-lg-9">
+            <!-- Recent Donations Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-clock-history me-2 text-primary"></i> Recent Donations & Receipts</h5>
+                    <a asp-controller="Account" asp-action="MyDonations" class="btn btn-sm btn-outline-primary">View All Donations</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Receipt #</th>
+                                <th>Cause</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Date</th>
+                                <th class="text-end">Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.RecentDonations.Any())
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">
+                                        You haven't made any donations yet. <a asp-controller="Donation" asp-action="Donate" class="text-primary fw-semibold">Make your first donation</a>.
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var d in Model.RecentDonations)
+                            {
+                                <tr>
+                                    <td><code>@(d.Receipt?.ReceiptNumber ?? $"#{d.Id}")</code></td>
+                                    <td>
+                                        <div class="fw-bold text-dark">@(d.Cause?.Title ?? "General Relief")</div>
+                                        <small class="text-muted">@(d.Cause?.Category ?? "Welfare")</small>
+                                    </td>
+                                    <td class="fw-bold text-success">@d.Currency @d.Amount.ToString("N0")</td>
+                                    <td><span class="badge bg-light text-dark border">@d.PaymentMethod</span></td>
+                                    <td class="text-muted small">@d.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    <td class="text-end">
+                                        @if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid)
+                                        {
+                                            <a asp-controller="Donation" asp-action="Receipt" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary" title="View Tax Receipt">
+                                                <i class="bi bi-receipt me-1"></i> Receipt
+                                            </a>
+                                        }
+                                        else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i> Under Review</span>
+                                        }
+                                        else if (d.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Failed)
+                                        {
+                                            <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Rejected</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@d.Status</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Active Programme Interests -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-calendar-heart me-2 text-warning"></i> Registered Programme Interests</h5>
+                    <a asp-controller="Programmes" asp-action="Index" class="btn btn-sm btn-outline-primary">Explore Programmes</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Programme</th>
+                                <th>Location</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th class="text-end">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.ProgrammeInterests.Any())
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        You haven't expressed interest in any programmes yet. <a asp-controller="Programmes" asp-action="Index" class="text-primary fw-semibold">Browse Drives</a>.
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var pi in Model.ProgrammeInterests)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-dark">@(pi.Programme?.Title ?? "Programme Drive")</td>
+                                    <td class="small text-muted"><i class="bi bi-geo-alt"></i> @(pi.Programme?.Location ?? "Pakistan")</td>
+                                    <td class="small text-muted">@(pi.Programme?.StartDate.ToString("dd MMM yyyy") ?? "-")</td>
+                                    <td>
+                                        <span class="badge @(pi.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.InterestStatus.Confirmed ? "bg-success" : "bg-warning text-dark")">
+                                            @pi.Status
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        @if (pi.Programme != null)
+                                        {
+                                            <a asp-controller="Programmes" asp-action="Details" asp-route-id="@pi.ProgrammeId" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

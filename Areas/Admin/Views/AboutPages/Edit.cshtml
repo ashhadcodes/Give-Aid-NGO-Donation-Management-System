@@ -1,0 +1,65 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.AboutPage
+@{
+    ViewData["Title"] = $"Edit Section: {Model.Title}";
+}
+
+<div class="mb-4">
+    <a asp-area="Admin" asp-controller="AboutPages" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to CMS Pages
+    </a>
+    <h2 class="fw-bold mb-1">Edit CMS Section: @Model.Title</h2>
+    <p class="text-muted small">Update copy, key metrics, and banner imagery for public About pages.</p>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-10">
+        <div class="card border-0 shadow-sm p-3 p-sm-4">
+            <form asp-area="Admin" asp-controller="AboutPages" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="SectionKey" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Section Identifier</label>
+                        <input type="text" class="form-control" value="@Model.SectionKey" readonly disabled />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Title" class="form-label fw-semibold"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Subtitle" class="form-label fw-semibold"></label>
+                        <input asp-for="Subtitle" class="form-control" />
+                        <span asp-validation-for="Subtitle" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="BannerImageUrl" class="form-label fw-semibold">Banner Image URL</label>
+                        <input asp-for="BannerImageUrl" class="form-control" placeholder="https://images.unsplash.com/..." />
+                        <span asp-validation-for="BannerImageUrl" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Content" class="form-label fw-semibold">Section HTML / Markdown Content</label>
+                        <textarea asp-for="Content" class="form-control font-monospace" rows="12"></textarea>
+                        <span asp-validation-for="Content" class="text-danger small"></span>
+                        <small class="text-muted">You can write structured HTML elements like paragraphs, bullet lists, bold highlights, etc.</small>
+                    </div>
+
+                    <div class="col-12 mt-4"><div class="admin-form-actions"><button type="submit" class="btn btn-primary px-4 fw-bold">
+                            <i class="bi bi-check-circle me-1"></i> Save Changes
+                        </button><a asp-area="Admin" asp-controller="AboutPages" asp-action="Index" class="btn btn-outline-secondary">Cancel</a></div></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

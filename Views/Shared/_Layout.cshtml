@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>@ViewData["Title"] - Give-AID NGO Welfare & Donation Management System</title>
+    
+    <!-- Instant Theme Bootstrapper (Zero Flash of Unstyled Theme) -->
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('giveaid_theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } catch (e) { }
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- AOS Scroll Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom Site CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Top Scroll Progress Bar -->
+    <div id="scrollProgressBar"></div>
+
+    <!-- Emergency Appeal Ticker / Top Bar -->
+    <div class="topbar-emergency d-none d-md-block no-print">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-danger text-white pulse-badge me-1"><i class="bi bi-broadcast me-1"></i> Live Appeal</span>
+                <span class="text-secondary d-none d-xl-inline">Monsoon Emergency Flood Relief Active across Balochistan & Sindh. 100% direct beneficiary allocation.</span>
+                <span class="text-secondary d-inline d-xl-none">Emergency Flood Relief Active.</span>
+                <a asp-controller="Donation" asp-action="Donate" class="badge bg-warning text-dark fw-bold text-decoration-none ms-1 ms-xl-2">
+                    <i class="bi bi-heart-fill text-danger me-1"></i> Deploy Aid
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-2 gap-sm-3 small">
+                <span><i class="bi bi-telephone-fill text-warning me-1"></i> +92-51-111-448-324</span>
+                <span class="opacity-25 d-none d-sm-inline">|</span>
+                <span class="d-none d-sm-inline"><i class="bi bi-envelope-fill text-warning me-1"></i> contact@giveaid.org</span>
+                <span class="opacity-25">|</span>
+                <div class="d-flex gap-2.5">
+                    <a href="https://facebook.com" target="_blank" class="text-secondary" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="https://twitter.com" target="_blank" class="text-secondary" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="https://instagram.com" target="_blank" class="text-secondary" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar with Clean Responsive Layout -->
+    <header class="sticky-top no-print">
+        <nav class="navbar navbar-expand-lg navbar-giveaid">
+            <div class="container-fluid px-3 px-sm-4 px-xl-5">
+                <!-- Brand Logo with Heartbeat Pulse -->
+                <a class="navbar-brand me-2 me-lg-3" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-badge"><i class="bi bi-heart-pulse-fill"></i> Give-AID</span>
+                    <span class="d-none d-xxl-inline fw-bold text-secondary fs-6">Welfare System</span>
+                </a>
+                
+                <!-- Mobile Actions Cluster (< 992px: Theme, User/Login, Donate, Hamburger) -->
+                <div class="d-flex align-items-center gap-1.5 gap-sm-2 d-lg-none ms-auto">
+                    <!-- Quick Mobile Theme Switcher Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm p-1.5 dropdown-toggle-no-caret" type="button" id="mobileThemeDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Change Theme">
+                            <i class="bi bi-palette-fill text-warning"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="mobileThemeDropdown" style="min-width: 190px;">
+                            <li class="px-3 py-1.5 border-bottom"><small class="fw-bold text-muted text-uppercase">Select Theme</small></li>
+                            <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="light"><span class="theme-color-dot me-2" style="background:#059669;"></span> Clean Light (Default)</button></li>
+                            <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="emerald"><span class="theme-color-dot me-2" style="background:#10b981;"></span> Cyber Emerald</button></li>
+                            <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="indigo"><span class="theme-color-dot me-2" style="background:#6366f1;"></span> Midnight Indigo</button></li>
+                            <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="gold"><span class="theme-color-dot me-2" style="background:#f59e0b;"></span> Royal Gold</button></li>
+                            <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="ocean"><span class="theme-color-dot me-2" style="background:#06b6d4;"></span> Neon Oceanic</button></li>
+                        </ul>
+                    </div>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                        {
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-danger btn-sm p-1.5 fw-bold" title="Admin Console">
+                                <i class="bi bi-speedometer2"></i>
+                            </a>
+                        }
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1 px-2 py-1" type="button" id="mobileUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="badge rounded-circle bg-primary text-white p-1" style="width: 22px; height: 22px; font-size: 0.72rem; display: inline-flex; align-items: center; justify-content: center;">
+                                    @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                                </span>
+                                <span class="fw-semibold text-secondary d-none d-sm-inline small">@(User.Identity.Name?.Split('@')[0] ?? "Member")</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="mobileUserDropdown" style="min-width: 220px;">
+                                <li class="px-3 py-2 border-bottom">
+                                    <div class="fw-bold text-dark text-truncate">@User.Identity.Name</div>
+                                    <small class="text-success fw-semibold"><i class="bi bi-patch-check-fill me-1"></i> Verified Member</small>
+                                </li>
+                                @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                                {
+                                    <li><a class="dropdown-item py-2 fw-bold text-danger" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-speedometer2 me-2"></i> Admin Console</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                }
+                                <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="Dashboard"><i class="bi bi-grid-1x2-fill me-2 text-primary"></i> Member Dashboard</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="Profile"><i class="bi bi-person-lines-fill me-2 text-info"></i> My Profile</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="MyDonations"><i class="bi bi-receipt me-2 text-success"></i> My Donations & Receipts</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="dropdown-item py-2 text-danger"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-sm px-2 py-1 d-flex align-items-center gap-1" title="Login">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span class="d-none d-sm-inline">Login</span>
+                        </a>
+                    }
+
+                    <a asp-controller="Donation" asp-action="Donate" class="btn btn-warning btn-sm fw-bold px-2.5 py-1 shadow-sm btn-pulse d-flex align-items-center gap-1 text-dark" title="Donate Now">
+                        <i class="bi bi-heart-fill text-danger"></i>
+                        <span>Donate</span>
+                    </a>
+
+                    <button class="btn btn-outline-secondary btn-sm p-1.5 ms-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvasNav" aria-controls="mobileOffcanvasNav" aria-label="Toggle navigation">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Desktop Navbar Collapse (>= 992px) -->
+                <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarMain">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-2 ms-xl-3 align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door-fill"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Donation" asp-action="Index"><i class="bi bi-heart-pulse-fill"></i> Causes</a>
+                        </li>
+                        
+                        <!-- About Us Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-info-circle-fill"></i> About Us
+                            </a>
+                            <ul class="dropdown-menu shadow-lg border-0" aria-labelledby="aboutDropdown">
+                                <li><a class="dropdown-item py-2" asp-controller="About" asp-action="WhatWeDo"><i class="bi bi-grid-fill text-primary me-2"></i> What We Do</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="About" asp-action="OurMission"><i class="bi bi-compass-fill text-success me-2"></i> Our Mission</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="About" asp-action="OurTeam"><i class="bi bi-people-fill text-info me-2"></i> Leadership Team</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="About" asp-action="Career"><i class="bi bi-briefcase-fill text-warning me-2"></i> Careers With Us</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="About" asp-action="Achievements"><i class="bi bi-trophy-fill text-danger me-2"></i> Achievements & Impact</a></li>
+                                <li><a class="dropdown-item py-2" asp-controller="About" asp-action="Supporters"><i class="bi bi-award-fill text-secondary me-2"></i> Corporate Supporters</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item py-2 fw-semibold" asp-controller="About" asp-action="ReadAboutUs"><i class="bi bi-book-half text-warning me-2"></i> Transparency Charter</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Programmes" asp-action="Index"><i class="bi bi-calendar-event-fill"></i> Programmes</a>
+                        </li>
+
+                        <!-- More Dropdown (NGOs, Partners, Gallery, Help Centre, Contact Us) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="moreNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-grid-3x3-gap-fill"></i> More
+                            </a>
+                            <ul class="dropdown-menu shadow-lg border-0" aria-labelledby="moreNavDropdown">
+                                <li><a class="dropdown-item py-2" asp-area="" asp-controller="Ngos" asp-action="Index"><i class="bi bi-buildings-fill text-primary me-2"></i> Partner NGOs</a></li>
+                                <li><a class="dropdown-item py-2" asp-area="" asp-controller="Home" asp-action="Partners"><i class="bi bi-handshake-fill text-secondary me-2"></i> Corporate Partners</a></li>
+                                <li><a class="dropdown-item py-2" asp-area="" asp-controller="Home" asp-action="Gallery"><i class="bi bi-images text-warning me-2"></i> Media Gallery</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item py-2" asp-area="" asp-controller="HelpCentre" asp-action="Index"><i class="bi bi-question-circle-fill text-info me-2"></i> Help Centre & FAQs</a></li>
+                                <li><a class="dropdown-item py-2" asp-area="" asp-controller="Contact" asp-action="Index"><i class="bi bi-envelope-fill text-success me-2"></i> Contact Us</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Desktop Actions Cluster (Theme Switcher + Admin + User/Account + Donate Now) -->
+                    <div class="d-flex align-items-center gap-2 gap-xl-2.5 ms-auto flex-shrink-0">
+                        <!-- Desktop Theme Switcher Dropdown -->
+                        <div class="dropdown">
+                            <button class="theme-selector-btn dropdown-toggle" type="button" id="desktopThemeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-palette-fill text-warning"></i>
+                                <span class="d-none d-xl-inline theme-name-label">Theme</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="desktopThemeDropdown" style="min-width: 200px;">
+                                <li class="px-3 py-1.5 border-bottom"><small class="fw-bold text-muted text-uppercase">Choose Theme</small></li>
+                                <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="light"><span class="theme-color-dot me-2" style="background:#059669;"></span> Clean Light (Default)</button></li>
+                                <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="emerald"><span class="theme-color-dot me-2" style="background:#10b981;"></span> Cyber Emerald</button></li>
+                                <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="indigo"><span class="theme-color-dot me-2" style="background:#6366f1;"></span> Midnight Indigo</button></li>
+                                <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="gold"><span class="theme-color-dot me-2" style="background:#f59e0b;"></span> Royal Gold</button></li>
+                                <li><button type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="ocean"><span class="theme-color-dot me-2" style="background:#06b6d4;"></span> Neon Oceanic</button></li>
+                            </ul>
+                        </div>
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-danger btn-sm fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1 shadow-sm" title="Administration Portal">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Admin Console</span>
+                                </a>
+                            }
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-2" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="badge rounded-circle bg-primary text-white p-1" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">
+                                        @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                                    </span>
+                                    <span class="fw-semibold text-truncate text-secondary" style="max-width: 100px;">@(User.Identity.Name?.Split('@')[0] ?? "Member")</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="userMenuButton" style="min-width: 240px;">
+                                    <li class="px-3 py-2 border-bottom">
+                                        <div class="fw-bold text-dark text-truncate">@User.Identity.Name</div>
+                                        <small class="text-success fw-semibold"><i class="bi bi-patch-check-fill me-1"></i> Verified Member</small>
+                                    </li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                                    {
+                                        <li><a class="dropdown-item py-2 fw-bold text-danger" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-speedometer2 me-2"></i> Admin Console</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="Dashboard"><i class="bi bi-grid-1x2-fill me-2 text-primary"></i> Member Dashboard</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="Profile"><i class="bi bi-person-lines-fill me-2 text-info"></i> My Profile</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="MyDonations"><i class="bi bi-receipt me-2 text-success"></i> My Donations & Receipts</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="MyInterests"><i class="bi bi-calendar-check me-2 text-warning"></i> Programme Interests</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="MyQueries"><i class="bi bi-chat-dots me-2 text-secondary"></i> My Queries</a></li>
+                                    <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="InviteFriend"><i class="bi bi-person-plus-fill me-2 text-warning"></i> Invite a Friend</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item py-2 text-danger"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-sm px-2.5 py-1.5 d-inline-flex align-items-center gap-1" title="Sign In">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Login</span>
+                            </a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-sm px-2.5 py-1.5 d-inline-flex align-items-center gap-1" title="Create Account">
+                                <i class="bi bi-person-plus"></i>
+                                <span>Register</span>
+                            </a>
+                        }
+
+                        <a asp-controller="Donation" asp-action="Donate" class="btn btn-warning btn-sm fw-bold px-3 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm btn-pulse text-dark" title="Make a Donation">
+                            <i class="bi bi-heart-fill text-danger"></i>
+                            <span>Donate Now</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Offcanvas Navigation Drawer (Light, Clean, Fully Responsive) -->
+    <div class="offcanvas offcanvas-end offcanvas-giveaid d-lg-none no-print" tabindex="-1" id="mobileOffcanvasNav" aria-labelledby="mobileOffcanvasLabel">
+        <div class="offcanvas-header border-bottom px-4 py-3 bg-light">
+            <div class="d-flex align-items-center gap-2" id="mobileOffcanvasLabel">
+                <span class="brand-badge bg-success text-white px-2.5 py-1 rounded fw-bold fs-6">
+                    <i class="bi bi-heart-pulse-fill"></i> Give-AID
+                </span>
+                <span class="fw-bold text-dark fs-6">Navigation Menu</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column justify-content-between p-3 p-sm-4 bg-white">
+            <div>
+                <!-- User Profile Header if Authenticated -->
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <span class="badge rounded-circle bg-primary text-white p-2 fs-5">
+                                @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                            </span>
+                            <div class="min-w-0 flex-grow-1">
+                                <div class="fw-bold text-dark text-truncate">@(User.Identity.Name?.Split('@')[0] ?? "Member")</div>
+                                <small class="text-muted text-truncate d-block">@User.Identity.Name</small>
+                            </div>
+                        </div>
+                        @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                        {
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-sm btn-danger w-100 fw-bold mb-2">
+                                <i class="bi bi-speedometer2 me-1"></i> Admin Console
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="text-secondary small fw-semibold">Welcome to Give-AID</span>
+                            <span class="badge bg-success-subtle text-success">Verified NGO</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-sm w-100 fw-semibold">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-sm w-100 fw-semibold">
+                                    <i class="bi bi-person-plus me-1"></i> Register
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Complete Navigation Links List -->
+                <ul class="nav flex-column gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-door-fill text-primary me-2"></i> Home Overview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Donation" asp-action="Index">
+                            <i class="bi bi-heart-pulse-fill text-danger me-2"></i> Active Giving Causes
+                        </a>
+                    </li>
+                    
+                    <!-- Mobile About Accordion -->
+                    <li class="nav-item">
+                        <div class="accordion accordion-flush" id="aboutAccordionMobile">
+                            <div class="accordion-item border-0 bg-transparent">
+                                <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed px-3 py-2 text-secondary fw-semibold bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbout" aria-expanded="false" aria-controls="flush-collapseAbout">
+                                        <i class="bi bi-info-circle-fill text-info me-2"></i> About Give-AID
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseAbout" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#aboutAccordionMobile">
+                                    <div class="accordion-body ps-4 py-1 d-flex flex-column gap-1">
+                                        <a class="nav-link py-1.5 text-secondary" asp-controller="About" asp-action="WhatWeDo"><i class="bi bi-grid-fill text-primary me-2"></i> What We Do</a>
+                                        <a class="nav-link py-1.5 text-secondary" asp-controller="About" asp-action="OurMission"><i class="bi bi-compass-fill text-success me-2"></i> Our Mission</a>
+                                        <a class="nav-link py-1.5 text-secondary" asp-controller="About" asp-action="OurTeam"><i class="bi bi-people-fill text-info me-2"></i> Leadership Team</a>
+                                        <a class="nav-link py-1.5 text-secondary" asp-controller="About" asp-action="Career"><i class="bi bi-briefcase-fill text-warning me-2"></i> Careers</a>
+                                        <a class="nav-link py-1.5 text-secondary" asp-controller="About" asp-action="Achievements"><i class="bi bi-trophy-fill text-danger me-2"></i> Achievements</a>
+                                        <a class="nav-link py-1.5 text-secondary" asp-controller="About" asp-action="Supporters"><i class="bi bi-award-fill text-secondary me-2"></i> Supporters</a>
+                                        <a class="nav-link py-1.5 fw-bold text-dark" asp-controller="About" asp-action="ReadAboutUs"><i class="bi bi-book-half text-warning me-2"></i> Transparency Charter</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Programmes" asp-action="Index">
+                            <i class="bi bi-calendar-event-fill text-primary me-2"></i> Programmes & Drives
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Ngos" asp-action="Index">
+                            <i class="bi bi-buildings-fill text-danger me-2"></i> Partner NGOs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Home" asp-action="Partners">
+                            <i class="bi bi-handshake-fill text-secondary me-2"></i> Corporate Partners
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Home" asp-action="Gallery">
+                            <i class="bi bi-images text-warning me-2"></i> Media Gallery
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="HelpCentre" asp-action="Index">
+                            <i class="bi bi-question-circle-fill text-info me-2"></i> Help Centre & FAQs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" asp-controller="Contact" asp-action="Index">
+                            <i class="bi bi-envelope-fill text-success me-2"></i> Contact Us
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Mobile Theme Switcher Box -->
+                <div class="mt-3 p-3 bg-light rounded-3 border">
+                    <small class="fw-bold text-muted text-uppercase d-block mb-2"><i class="bi bi-palette-fill text-warning me-1"></i> Color Theme</small>
+                    <div class="d-grid gap-1.5" style="grid-template-columns: repeat(2, 1fr);">
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="light">
+                            <span class="theme-color-dot" style="background:#059669;"></span>
+                            <span class="small fw-semibold">Clean Light</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="emerald">
+                            <span class="theme-color-dot" style="background:#10b981;"></span>
+                            <span class="small fw-semibold">Emerald</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="indigo">
+                            <span class="theme-color-dot" style="background:#6366f1;"></span>
+                            <span class="small fw-semibold">Indigo</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="gold">
+                            <span class="theme-color-dot" style="background:#f59e0b;"></span>
+                            <span class="small fw-semibold">Royal Gold</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="ocean" style="grid-column: span 2;">
+                            <span class="theme-color-dot" style="background:#06b6d4;"></span>
+                            <span class="small fw-semibold">Neon Oceanic</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 pt-3 border-top">
+                <a asp-controller="Donation" asp-action="Donate" class="btn btn-warning w-100 fw-bold py-2.5 mb-2 shadow-sm btn-pulse text-dark">
+                    <i class="bi bi-heart-fill text-danger me-1"></i> Donate Online Now
+                </a>
+                
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Account" asp-action="Dashboard" class="btn btn-outline-primary w-100 fw-semibold mb-2">
+                        <i class="bi bi-grid-1x2-fill me-1"></i> Member Dashboard
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-right me-1"></i> Sign Out</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main role="main">
+        <div class="container mt-2">
+            <partial name="_NotificationPartial" />
+        </div>
+        @RenderBody()
+    </main>
+
+    <!-- Floating Action Button for Fast Donation -->
+    <a asp-controller="Donation" asp-action="Donate" class="fab-donate-floating no-print" title="Make an Instant Donation">
+        <i class="bi bi-heart-fill text-danger"></i>
+        <span>Fast Donate</span>
+    </a>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top no-print" id="backToTopBtn" title="Back to Top">
+        <i class="bi bi-arrow-up"></i>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-giveaid no-print">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-badge bg-success text-white px-2 py-1 rounded fw-bold fs-5"><i class="bi bi-heart-pulse-fill"></i> Give-AID</span>
+                    </div>
+                    <p class="small text-muted mb-4">
+                        Give-AID is a unified welfare ecosystem connecting compassionate individuals, institutional philanthropists, and vetted grassroots NGOs to eliminate poverty, advance education, support special needs, and provide rapid disaster relief.
+                    </p>
+                    <div class="d-flex gap-3 fs-5 mb-4">
+                        <a href="https://facebook.com" target="_blank" class="footer-social-icon" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="https://twitter.com" target="_blank" class="footer-social-icon" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://instagram.com" target="_blank" class="footer-social-icon" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="https://linkedin.com" target="_blank" class="footer-social-icon" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://youtube.com" target="_blank" class="footer-social-icon" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                    </div>
+
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-light border small">
+                        <span class="badge rounded-pill bg-success p-1"> </span>
+                        <span class="text-secondary">All Gateways Active (JazzCash, Easypaisa, Cards)</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <h5>Explore Causes</h5>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a asp-controller="Home" asp-action="Index">Home Overview</a></li>
+                        <li><a asp-controller="Donation" asp-action="Index">Active Giving Causes</a></li>
+                        <li><a asp-controller="Programmes" asp-action="Index">Welfare Programmes</a></li>
+                        <li><a asp-controller="Ngos" asp-action="Index">Verified NGOs</a></li>
+                        <li><a asp-controller="Home" asp-action="Partners">Corporate Partners</a></li>
+                        <li><a asp-controller="Home" asp-action="Gallery">Photo Gallery</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <h5>Transparency & NGO</h5>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a asp-controller="About" asp-action="WhatWeDo">What We Do</a></li>
+                        <li><a asp-controller="About" asp-action="OurMission">Mission & Vision</a></li>
+                        <li><a asp-controller="About" asp-action="OurTeam">Leadership & Board</a></li>
+                        <li><a asp-controller="About" asp-action="Career">Careers & Volunteering</a></li>
+                        <li><a asp-controller="About" asp-action="Achievements">Impact Achievements</a></li>
+                        <li><a asp-controller="HelpCentre" asp-action="Index">Help Centre & FAQs</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5>Contact Headquarters</h5>
+                    <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill text-danger me-2"></i> Give-AID Tower, Sector G-8 Markaz, Islamabad, Pakistan</p>
+                    <p class="small text-muted mb-2"><i class="bi bi-telephone-fill text-success me-2"></i> +92-51-111-448-324</p>
+                    <p class="small text-muted mb-3"><i class="bi bi-envelope-fill text-warning me-2"></i> contact@giveaid.org</p>
+                    <div class="p-3 bg-light rounded border">
+                        <small class="text-dark fw-bold d-block mb-1"><i class="bi bi-shield-lock-fill text-success me-1"></i> 100% Traceable Donations</small>
+                        <small class="text-muted d-block">Secured with 256-bit encryption. Instant verifiable receipts generated for every contribution.</small>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-4 opacity-25" />
+
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start small">
+                    &copy; @DateTime.UtcNow.Year Give-AID NGO Welfare & Donation Management System. All rights reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end small mt-2 mt-md-0">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-muted me-3">Privacy Policy</a>
+                    <a asp-controller="Contact" asp-action="Index" class="text-muted">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Bundle & Animation Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 50,
+            disable: function () {
+                return window.matchMedia('(max-width: 767.98px)').matches;
+            }
+        });
+    </script>
+
+    <!-- Custom Master Site JS -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

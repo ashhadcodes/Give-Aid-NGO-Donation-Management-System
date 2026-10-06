@@ -1,0 +1,78 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.ProgrammeInterest>
+@{
+    ViewData["Title"] = "My Registered Programme Interests";
+}
+
+<div class="container py-4 py-md-5">
+    <div class="row g-4">
+        <partial name="_AccountNavPartial" />
+
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm p-3 p-sm-4 p-md-5">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4">
+                    <div>
+                        <h3 class="fw-bold mb-1 text-primary">Programme Interests</h3>
+                        <p class="text-muted small mb-0">Programmes and volunteer activities you have registered interest in.</p>
+                    </div>
+                    <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-primary btn-sm flex-shrink-0">
+                        Explore More Programmes
+                    </a>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3"></i>
+                        <h5>No programme interest registrations found.</h5>
+                        <p class="text-muted small">Explore upcoming welfare drives and sign up to participate.</p>
+                        <a asp-controller="Programmes" asp-action="Index" class="btn btn-primary">Browse Programmes</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group gap-3">
+                        @foreach (var pi in Model)
+                        {
+                            <div class="list-group-item border rounded-3 p-3 p-sm-4 shadow-sm">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-2 mb-2">
+                                    <div>
+                                        <span class="badge bg-primary-subtle text-primary mb-1">@pi.Programme?.Category</span>
+                                        <h5 class="fw-bold mb-1">@pi.Programme?.Title</h5>
+                                        <small class="text-muted"><i class="bi bi-geo-alt"></i> @pi.Programme?.Location</small>
+                                    </div>
+                                    <span class="badge @(pi.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.InterestStatus.Confirmed ? "bg-success" : "bg-warning text-dark")">
+                                        @pi.Status
+                                    </span>
+                                </div>
+                                
+                                <div class="bg-light p-3 rounded small my-3">
+                                    <div class="row g-2">
+                                        <div class="col-sm-6">
+                                            <strong>Dates:</strong> @pi.Programme?.StartDate.ToString("dd MMM yyyy") to @pi.Programme?.EndDate.ToString("dd MMM yyyy")
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <strong>Registered On:</strong> @pi.ExpressedAt.ToString("dd MMM yyyy, HH:mm") UTC
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(pi.Notes))
+                                        {
+                                            <div class="col-12 mt-2">
+                                                <strong>Your Note:</strong> <span class="text-muted">@pi.Notes</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (pi.Programme != null)
+                                {
+                                    <a asp-controller="Programmes" asp-action="Details" asp-route-id="@pi.ProgrammeId" class="btn btn-sm btn-outline-secondary">
+                                        View Programme Details
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,683 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.ViewModels.DonateFormViewModel
+@{
+    ViewData["Title"] = "Secure Online Donation - Give-AID";
+    var causes = Model.AvailableCauses ?? (ViewBag.Causes as IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationCause>) ?? Enumerable.Empty<Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationCause>();
+    var selectedCause = Model.SelectedCause ?? (ViewBag.SelectedCause as Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationCause);
+}
+
+<div class="container py-4 py-md-5">
+    <div class="row justify-content-center g-4">
+        <!-- Main Donation Form Column (3D Glassmorphism Checkout Card) -->
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="card border-0 shadow-lg p-3 p-sm-4 p-md-5 rounded-4 quick-donate-card tilt-card-3d">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 card-3d-depth-1">
+                    <span class="badge bg-success-subtle text-success fw-bold px-3 py-1.5 rounded-pill">
+                        <i class="bi bi-shield-lock-fill me-1"></i> 256-Bit SSL Encrypted
+                    </span>
+                    <span class="text-secondary small"><i class="bi bi-patch-check-fill text-success"></i> 100% Direct Allocation</span>
+                </div>
+
+                <h2 class="display-6 fw-bold mb-2 text-dark card-3d-depth-1">Complete Your Humanitarian Donation</h2>
+                <p class="text-secondary mb-4 card-3d-depth-1">Every contribution generates an official verifiable tax-exempt receipt with cryptographic digital signature.</p>
+
+                <form asp-controller="Donation" asp-action="Donate" method="post" enctype="multipart/form-data" id="donationCheckoutForm" class="card-3d-depth-2">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <!-- Step 1: Select Welfare Cause -->
+                    <div class="mb-4">
+                        <label asp-for="CauseId" class="form-label fw-bold text-dark">
+                            <i class="bi bi-flag-fill text-danger me-1"></i> Select Donation Cause / Purpose
+                        </label>
+                        <select asp-for="CauseId" class="form-select form-select-lg" id="causeSelectDropdown">
+                            @foreach (var c in causes)
+                            {
+                                <option value="@c.Id" data-target="@c.TargetAmount" data-raised="@c.RaisedAmount" data-desc="@c.Description" data-img="@c.ImageUrl" selected="@(Model.CauseId == c.Id)">
+                                    @c.Title (@c.Category) - Goal: PKR @c.TargetAmount.ToString("N0")
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="CauseId" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Step 2: Choose Donation Amount (3D Interactive Chips) -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark">
+                            <i class="bi bi-cash-coin text-warning me-1"></i> Choose or Enter Amount (PKR)
+                        </label>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button type="button" class="btn btn-outline-primary btn-amount amount-chip" data-amount="1000">PKR 1,000</button>
+                            <button type="button" class="btn btn-outline-primary btn-amount amount-chip active" data-amount="2500">PKR 2,500</button>
+                            <button type="button" class="btn btn-outline-primary btn-amount amount-chip" data-amount="5000">PKR 5,000</button>
+                            <button type="button" class="btn btn-outline-primary btn-amount amount-chip" data-amount="10000">PKR 10,000</button>
+                            <button type="button" class="btn btn-outline-primary btn-amount amount-chip" data-amount="25000">PKR 25,000</button>
+                            <button type="button" class="btn btn-outline-primary btn-amount amount-chip" data-amount="50000">PKR 50,000</button>
+                        </div>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light fw-bold text-success border-end-0 border">PKR</span>
+                            <input asp-for="Amount" class="form-control fw-bold fs-4 border-start-0" id="donationAmountInput" min="10" step="10" />
+                        </div>
+                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Step 3: Donor Identification Details -->
+                    <h5 class="fw-bold mb-3 mt-4 text-white border-top border pt-4">
+                        <i class="bi bi-person-badge-fill text-primary me-1"></i> Donor Information
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6 col-12">
+                            <label asp-for="DonorName" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="DonorName" class="form-control" placeholder="Your Full Name" />
+                            <span asp-validation-for="DonorName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label asp-for="DonorEmail" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="DonorEmail" class="form-control" placeholder="name@example.com" />
+                            <span asp-validation-for="DonorEmail" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label asp-for="DonorPhone" class="form-label fw-semibold text-secondary"></label>
+                            <input asp-for="DonorPhone" class="form-control" placeholder="+92-300-1234567" />
+                            <span asp-validation-for="DonorPhone" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Message" class="form-label fw-semibold text-secondary"></label>
+                            <textarea asp-for="Message" class="form-control" rows="2" placeholder="Optional dedication message or specific instructions..."></textarea>
+                            <span asp-validation-for="Message" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="Anonymous" class="form-check-input" type="checkbox" id="anonCheck">
+                                <label asp-for="Anonymous" class="form-check-label text-secondary" for="anonCheck">
+                                    Make this donation anonymous on public leaderboards and donor wall.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Payment Method Selection & Dynamic Gateways -->
+                    <h5 class="fw-bold mb-3 border-top border pt-4 text-white">
+                        <i class="bi bi-credit-card-2-front-fill text-success me-1"></i> Select Payment Method
+                    </h5>
+
+                    <!-- Method Tabs (Mobile Wrapped & Responsive) -->
+                    <ul class="nav nav-pills flex-column flex-sm-row nav-fill gap-2 mb-3" id="paymentMethodTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold py-2.5" id="jazzcash-tab" data-bs-toggle="pill" data-bs-target="#jazzcash-content" type="button" role="tab" data-method="JazzCash">
+                                <i class="bi bi-phone-vibrate text-danger me-1"></i> JazzCash
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-2.5" id="easypaisa-tab" data-bs-toggle="pill" data-bs-target="#easypaisa-content" type="button" role="tab" data-method="Easypaisa">
+                                <i class="bi bi-wallet2 text-success me-1"></i> Easypaisa
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-2.5" id="card-tab" data-bs-toggle="pill" data-bs-target="#card-content" type="button" role="tab" data-method="Card">
+                                <i class="bi bi-credit-card text-primary me-1"></i> Card
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold py-2.5" id="bank-tab" data-bs-toggle="pill" data-bs-target="#bank-content" type="button" role="tab" data-method="BankTransfer">
+                                <i class="bi bi-bank text-warning me-1"></i> Bank / Manual
+                            </button>
+                        </li>
+                    </ul>
+
+                    <input type="hidden" asp-for="PaymentMethod" id="selectedPaymentMethodInput" value="JazzCash" />
+
+                    <!-- Tab Contents with 3D Depth Card -->
+                    <div class="tab-content bg-light p-3 p-sm-4 rounded-3 border border mb-4" id="paymentTabContent">
+                        <!-- 1. JAZZCASH MANUAL VERIFICATION FLOW -->
+                        <div class="tab-pane fade show active" id="jazzcash-content" role="tabpanel">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                                <div>
+                                    <h5 class="fw-bold mb-0 text-danger"><i class="bi bi-phone-vibrate me-1"></i> JazzCash Mobile Transfer</h5>
+                                    <small class="text-secondary">Send to Give-Aid registered number & upload payment screenshot</small>
+                                </div>
+                                <span class="badge bg-warning text-dark fw-bold"><i class="bi bi-hourglass-split me-1"></i> Manual Verification</span>
+                            </div>
+
+                            <!-- Official Account Details Card -->
+                            <div class="p-3 rounded-3 border border-danger border-opacity-50 mb-3" style="background: rgba(220, 53, 69, 0.08);">
+                                <div class="row align-items-center g-2">
+                                    <div class="col-sm-8 col-12">
+                                        <small class="text-secondary text-uppercase fw-semibold d-block">Official Payment Number</small>
+                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                            <span class="fs-4 fw-bolder font-monospace text-warning letter-spacing-1">03272762043</span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning btn-copy-clipboard px-2 py-0.5" data-clipboard-text="03272762043" title="Copy Number">
+                                                <i class="bi bi-clipboard me-1"></i> Copy
+                                            </button>
+                                        </div>
+                                        <div class="small text-secondary mt-1">Account Title: <strong class="text-dark">Give-Aid Foundation</strong></div>
+                                    </div>
+                                    <div class="col-sm-4 col-12 text-sm-end">
+                                        <span class="badge bg-danger px-2.5 py-1.5 rounded-pill"><i class="bi bi-shield-check me-1"></i> Verified Merchant</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step-by-Step Instructions -->
+                            <div class="mb-3 p-2.5 rounded bg-light border border">
+                                <label class="form-label fw-bold text-white small text-uppercase mb-2"><i class="bi bi-list-ol text-warning me-1"></i> Payment Instructions</label>
+                                <ol class="small text-secondary ps-3 mb-0 d-flex flex-column gap-1">
+                                    <li>Open your <strong>JazzCash App</strong> on your phone.</li>
+                                    <li>Go to <strong>Send Money / Transfer</strong> &rarr; <strong>Mobile Account</strong>.</li>
+                                    <li>Enter receiver number: <strong class="text-warning font-monospace">03272762043</strong> (Title: <em>Give-Aid Foundation</em>).</li>
+                                    <li>Enter your chosen donation amount matching your pledge.</li>
+                                    <li>Complete transaction and take a <strong>Screenshot</strong> of the success receipt.</li>
+                                    <li>Enter your <strong>Transaction ID (TID)</strong> and upload the <strong>Screenshot</strong> below.</li>
+                                </ol>
+                            </div>
+
+                            <!-- Input Fields -->
+                            <div class="row g-3">
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Transaction ID (TID / Ref #) <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="jcTidInput" name="DepositReference" placeholder="e.g. 1029384756" required />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Sender JazzCash Mobile Number</label>
+                                    <input type="text" class="form-control" id="jcSenderInput" name="MobileAccountNumber" placeholder="0300-1234567" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold text-secondary">Payment Screenshot <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control proof-file-input" id="jcProofInput" name="ProofFile" accept=".jpg,.jpeg,.png,.webp" required />
+                                    <small class="text-secondary">Supported formats: JPG, JPEG, PNG, WEBP (Max 5MB)</small>
+
+                                    <!-- Live Image Preview -->
+                                    <div class="screenshot-preview-box mt-3 d-none p-2 rounded-3 border border-secondary border-opacity-50" style="background: rgba(0,0,0,0.3);">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="" class="preview-img rounded-2 shadow-sm" style="width: 64px; height: 64px; object-fit: cover;" alt="Preview" />
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="fw-bold text-white small preview-filename text-truncate">screenshot.png</div>
+                                                <small class="text-secondary preview-filesize">1.2 MB</small>
+                                                <div class="text-success small fw-semibold"><i class="bi bi-check-circle-fill me-1"></i> Screenshot ready for review</div>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-preview" title="Remove">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. EASYPAISA MANUAL VERIFICATION FLOW -->
+                        <div class="tab-pane fade" id="easypaisa-content" role="tabpanel">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                                <div>
+                                    <h5 class="fw-bold mb-0 text-success"><i class="bi bi-wallet2 me-1"></i> Easypaisa Mobile Transfer</h5>
+                                    <small class="text-secondary">Send to Give-Aid registered number & upload payment screenshot</small>
+                                </div>
+                                <span class="badge bg-warning text-dark fw-bold"><i class="bi bi-hourglass-split me-1"></i> Manual Verification</span>
+                            </div>
+
+                            <!-- Official Account Details Card -->
+                            <div class="p-3 rounded-3 border border-success border-opacity-50 mb-3" style="background: rgba(25, 135, 84, 0.08);">
+                                <div class="row align-items-center g-2">
+                                    <div class="col-sm-8 col-12">
+                                        <small class="text-secondary text-uppercase fw-semibold d-block">Official Payment Number</small>
+                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                            <span class="fs-4 fw-bolder font-monospace text-warning letter-spacing-1">03272762043</span>
+                                            <button type="button" class="btn btn-sm btn-outline-warning btn-copy-clipboard px-2 py-0.5" data-clipboard-text="03272762043" title="Copy Number">
+                                                <i class="bi bi-clipboard me-1"></i> Copy
+                                            </button>
+                                        </div>
+                                        <div class="small text-secondary mt-1">Account Title: <strong class="text-dark">Give-Aid Foundation</strong></div>
+                                    </div>
+                                    <div class="col-sm-4 col-12 text-sm-end">
+                                        <span class="badge bg-success px-2.5 py-1.5 rounded-pill"><i class="bi bi-shield-check me-1"></i> Verified Account</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step-by-Step Instructions -->
+                            <div class="mb-3 p-2.5 rounded bg-light border border">
+                                <label class="form-label fw-bold text-white small text-uppercase mb-2"><i class="bi bi-list-ol text-warning me-1"></i> Payment Instructions</label>
+                                <ol class="small text-secondary ps-3 mb-0 d-flex flex-column gap-1">
+                                    <li>Open your <strong>Easypaisa App</strong> on your mobile device.</li>
+                                    <li>Select <strong>Send Money</strong> &rarr; <strong>Easypaisa Transfer</strong>.</li>
+                                    <li>Enter recipient number: <strong class="text-warning font-monospace">03272762043</strong> (Title: <em>Give-Aid Foundation</em>).</li>
+                                    <li>Enter your exact donation amount.</li>
+                                    <li>Confirm transfer and save a <strong>Screenshot</strong> of the completed receipt.</li>
+                                    <li>Enter your <strong>Transaction ID (TID)</strong> and upload the <strong>Screenshot</strong> below.</li>
+                                </ol>
+                            </div>
+
+                            <!-- Input Fields -->
+                            <div class="row g-3">
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Transaction ID (TID / Ref #) <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="epTidInput" placeholder="e.g. 9876543210" disabled />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Sender Easypaisa Mobile Number</label>
+                                    <input type="text" class="form-control" id="epSenderInput" placeholder="0345-1234567" disabled />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold text-secondary">Payment Screenshot <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control proof-file-input" id="epProofInput" accept=".jpg,.jpeg,.png,.webp" disabled />
+                                    <small class="text-secondary">Supported formats: JPG, JPEG, PNG, WEBP (Max 5MB)</small>
+
+                                    <!-- Live Image Preview -->
+                                    <div class="screenshot-preview-box mt-3 d-none p-2 rounded-3 border border-secondary border-opacity-50" style="background: rgba(0,0,0,0.3);">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="" class="preview-img rounded-2 shadow-sm" style="width: 64px; height: 64px; object-fit: cover;" alt="Preview" />
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="fw-bold text-white small preview-filename text-truncate">screenshot.png</div>
+                                                <small class="text-secondary preview-filesize">1.2 MB</small>
+                                                <div class="text-success small fw-semibold"><i class="bi bi-check-circle-fill me-1"></i> Screenshot ready for review</div>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-preview" title="Remove">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. CREDIT / DEBIT CARD INSTANT GATEWAY -->
+                        <div class="tab-pane fade" id="card-content" role="tabpanel">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-primary"><i class="bi bi-credit-card"></i> Visa / Mastercard / UnionPay</h6>
+                                    <small class="text-secondary">256-Bit SSL Encrypted Instant Gateway</small>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <span class="badge bg-primary text-white">VISA</span>
+                                    <span class="badge bg-warning text-dark">Mastercard</span>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label asp-for="CardNumber" class="form-label fw-semibold text-secondary"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-secondary border"><i class="bi bi-credit-card-fill"></i></span>
+                                        <input asp-for="CardNumber" class="form-control" placeholder="4000 1234 5678 9010" maxlength="19" id="cardNumberInput" disabled />
+                                    </div>
+                                    <span asp-validation-for="CardNumber" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label asp-for="CardHolderName" class="form-label fw-semibold text-secondary"></label>
+                                    <input asp-for="CardHolderName" class="form-control" placeholder="Name on Card" disabled />
+                                    <span asp-validation-for="CardHolderName" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <label asp-for="ExpiryMonth" class="form-label fw-semibold text-secondary"></label>
+                                    <input asp-for="ExpiryMonth" class="form-control" placeholder="MM" maxlength="2" disabled />
+                                    <span asp-validation-for="ExpiryMonth" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <label asp-for="Cvv" class="form-label fw-semibold text-secondary"></label>
+                                    <input asp-for="Cvv" class="form-control" placeholder="CVC" maxlength="4" disabled />
+                                    <span asp-validation-for="Cvv" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. BANK TRANSFER & DIRECT DEPOSIT -->
+                        <div class="tab-pane fade" id="bank-content" role="tabpanel">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                                <h6 class="fw-bold mb-0 text-warning"><i class="bi bi-bank2"></i> Bank Transfer & Direct Deposit</h6>
+                                <span class="badge bg-warning text-dark fw-bold">Manual Verification</span>
+                            </div>
+
+                            <!-- NGO Bank Account Information Box -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6 col-12">
+                                    <div class="p-3 rounded-3 border border bg-light h-100">
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <strong class="text-warning"><i class="bi bi-building me-1"></i> Meezan Bank Islamic</strong>
+                                            <span class="badge bg-success text-white">Direct Account</span>
+                                        </div>
+                                        <div class="small text-secondary mb-1">Title: <strong class="text-dark">Give-Aid Welfare Foundation</strong></div>
+                                        <div class="small text-secondary mb-1">
+                                            Account: <code class="text-warning">01020105829101</code>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary p-0 px-1 ms-1 btn-copy-clipboard" data-clipboard-text="01020105829101" title="Copy"><i class="bi bi-copy"></i></button>
+                                        </div>
+                                        <div class="small text-secondary mb-1">
+                                            IBAN: <code class="text-warning small">PK36MEZN0001020105829101</code>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary p-0 px-1 ms-1 btn-copy-clipboard" data-clipboard-text="PK36MEZN0001020105829101" title="Copy"><i class="bi bi-copy"></i></button>
+                                        </div>
+                                        <div class="small text-secondary">Branch: F-7 Markaz, Islamabad (Code: 0102)</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="p-3 rounded-3 border border bg-light h-100">
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <strong class="text-primary"><i class="bi bi-qr-code me-1"></i> Raast & Mobile Tills</strong>
+                                            <span class="badge bg-primary text-white">Instant 0% Fee</span>
+                                        </div>
+                                        <div class="small text-secondary mb-1">Raast ID: <code class="text-dark">03272762043</code></div>
+                                        <div class="small text-secondary mb-1">JazzCash Account: <code class="text-dark">03272762043</code></div>
+                                        <div class="small text-secondary mb-1">Easypaisa Account: <code class="text-dark">03272762043</code></div>
+                                        <div class="small text-secondary">Title: Give-Aid Foundation</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Manual Payment Submission Fields -->
+                            <div class="row g-3">
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Transaction / Slip Reference No <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="bankRefInput" placeholder="e.g. MEZN-849201" disabled />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Depositor Bank / Transfer Channel</label>
+                                    <input type="text" class="form-control" id="bankChannelInput" placeholder="e.g. Meezan Bank, HBL, Allied" disabled />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Deposit Date</label>
+                                    <input type="date" class="form-control" id="bankDateInput" value="@DateTime.UtcNow.ToString("yyyy-MM-dd")" disabled />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label class="form-label fw-semibold text-secondary">Deposit Slip / Screenshot <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control proof-file-input" id="bankProofInput" accept=".jpg,.jpeg,.png,.webp" disabled />
+                                    
+                                    <!-- Live Image Preview -->
+                                    <div class="screenshot-preview-box mt-3 d-none p-2 rounded-3 border border-secondary border-opacity-50" style="background: rgba(0,0,0,0.3);">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="" class="preview-img rounded-2 shadow-sm" style="width: 64px; height: 64px; object-fit: cover;" alt="Preview" />
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="fw-bold text-white small preview-filename text-truncate">receipt.png</div>
+                                                <small class="text-secondary preview-filesize">1.2 MB</small>
+                                                <div class="text-success small fw-semibold"><i class="bi bi-check-circle-fill me-1"></i> Slip ready for review</div>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-preview" title="Remove">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Submission CTA Button -->
+                    <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold py-3.5 shadow-lg btn-pulse text-dark fs-5" id="submitDonationBtn">
+                        <i class="bi bi-heart-fill text-danger me-2"></i> Confirm & Complete Donation of PKR <span id="btnAmountText">2,500</span>
+                    </button>
+                    <div class="text-center mt-3 text-secondary small">
+                        <i class="bi bi-shield-check text-success"></i> 100% Tax-deductible under Section 61 of the Income Tax Ordinance.
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sidebar: Cause Overview & Live Transparency Card (3D Tilt & Parallax) -->
+        <div class="col-lg-4" data-aos="fade-up">
+            <div class="card border-0 shadow-lg p-4 sticky-lg-top stat-box-modern tilt-card-3d text-start" style="top: 95px;">
+                <h5 class="fw-bold mb-3 text-white card-3d-depth-1"><i class="bi bi-info-circle-fill text-primary me-1"></i> Cause Details</h5>
+                
+                <div class="rounded-3 overflow-hidden mb-3 card-3d-depth-2 card-img-wrapper" style="aspect-ratio: 16 / 9;">
+                    <img id="sidebarCauseImg" src="@(selectedCause?.ImageUrl ?? "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=600&auto=format&fit=crop&q=80")" 
+                         class="w-100 h-100 object-fit-cover" alt="Cause Image" />
+                </div>
+                
+                <h6 class="fw-bold text-gradient-gold mb-1 card-3d-depth-1" id="sidebarCauseTitle">@(selectedCause?.Title ?? "Select a Cause")</h6>
+                <p class="text-secondary small mb-3" id="sidebarCauseDesc">
+                    @(selectedCause?.Description ?? "Choose a welfare cause from the dropdown list to see its funding goals and impact parameters.")
+                </p>
+
+                <div class="p-3 bg-light rounded-3 mb-3 border border card-3d-depth-1">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span class="text-secondary">Target Funding:</span>
+                        <strong class="text-dark" id="sidebarTargetAmt">PKR @(selectedCause?.TargetAmount.ToString("N0") ?? "0")</strong>
+                    </div>
+                    <div class="d-flex justify-content-between small mb-2">
+                        <span class="text-secondary">Already Raised:</span>
+                        <strong class="text-success" id="sidebarRaisedAmt">PKR @(selectedCause?.RaisedAmount.ToString("N0") ?? "0")</strong>
+                    </div>
+                    <div class="progress progress-giveaid" style="height: 6px;">
+                        <div class="progress-bar bg-success" id="sidebarProgressBar" style="width: 45%;"></div>
+                    </div>
+                </div>
+
+                <div class="border-top border pt-3">
+                    <h6 class="fw-bold small text-white mb-2"><i class="bi bi-patch-check-fill text-success"></i> Why Donate with Give-AID?</h6>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li><i class="bi bi-check2 text-success me-1"></i> Official cryptographic digital receipt</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> Real-time tracking of funds execution</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> Vetted & certified grassroots NGOs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Amount Buttons logic
+            const amountButtons = document.querySelectorAll('.btn-amount');
+            const amountInput = document.getElementById('donationAmountInput');
+            const btnAmountText = document.getElementById('btnAmountText');
+
+            function updateAmount(val) {
+                amountInput.value = val;
+                btnAmountText.textContent = Number(val).toLocaleString();
+            }
+
+            amountButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    amountButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateAmount(this.getAttribute('data-amount'));
+                });
+            });
+
+            amountInput.addEventListener('input', function () {
+                amountButtons.forEach(b => b.classList.remove('active'));
+                btnAmountText.textContent = Number(this.value || 0).toLocaleString();
+            });
+
+            // Payment method tab switching & input activation
+            const paymentTabs = document.querySelectorAll('#paymentMethodTabs button[data-bs-toggle="pill"]');
+            const paymentMethodInput = document.getElementById('selectedPaymentMethodInput');
+
+            function switchMethodInputs(method) {
+                paymentMethodInput.value = method;
+
+                // Reset all manual & card inputs
+                const jcInputs = document.querySelectorAll('#jazzcash-content input');
+                const epInputs = document.querySelectorAll('#easypaisa-content input');
+                const cardInputs = document.querySelectorAll('#card-content input');
+                const bankInputs = document.querySelectorAll('#bank-content input');
+
+                [...jcInputs, ...epInputs, ...cardInputs, ...bankInputs].forEach(inp => {
+                    inp.disabled = true;
+                    inp.removeAttribute('name');
+                });
+
+                if (method === 'JazzCash') {
+                    document.getElementById('jcTidInput').disabled = false;
+                    document.getElementById('jcTidInput').name = 'DepositReference';
+                    document.getElementById('jcSenderInput').disabled = false;
+                    document.getElementById('jcSenderInput').name = 'MobileAccountNumber';
+                    document.getElementById('jcProofInput').disabled = false;
+                    document.getElementById('jcProofInput').name = 'ProofFile';
+                } else if (method === 'Easypaisa') {
+                    document.getElementById('epTidInput').disabled = false;
+                    document.getElementById('epTidInput').name = 'DepositReference';
+                    document.getElementById('epSenderInput').disabled = false;
+                    document.getElementById('epSenderInput').name = 'MobileAccountNumber';
+                    document.getElementById('epProofInput').disabled = false;
+                    document.getElementById('epProofInput').name = 'ProofFile';
+                } else if (method === 'Card') {
+                    const cardNum = document.getElementById('cardNumberInput');
+                    if (cardNum) {
+                        cardNum.disabled = false;
+                        cardNum.name = 'CardNumber';
+                        document.querySelector('[name="CardHolderName"], #CardHolderName, input[placeholder="Name on Card"]').disabled = false;
+                        document.querySelector('[name="CardHolderName"], #CardHolderName, input[placeholder="Name on Card"]').name = 'CardHolderName';
+                        document.querySelector('[placeholder="MM"]').disabled = false;
+                        document.querySelector('[placeholder="MM"]').name = 'ExpiryMonth';
+                        document.querySelector('[placeholder="CVC"]').disabled = false;
+                        document.querySelector('[placeholder="CVC"]').name = 'Cvv';
+                    }
+                } else if (method === 'BankTransfer') {
+                    document.getElementById('bankRefInput').disabled = false;
+                    document.getElementById('bankRefInput').name = 'DepositReference';
+                    document.getElementById('bankChannelInput').disabled = false;
+                    document.getElementById('bankChannelInput').name = 'DepositorBank';
+                    document.getElementById('bankDateInput').disabled = false;
+                    document.getElementById('bankDateInput').name = 'DepositDate';
+                    document.getElementById('bankProofInput').disabled = false;
+                    document.getElementById('bankProofInput').name = 'ProofFile';
+                }
+            }
+
+            // Initialize default active tab
+            switchMethodInputs('JazzCash');
+
+            paymentTabs.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function (e) {
+                    const method = e.target.getAttribute('data-method');
+                    switchMethodInputs(method);
+                });
+            });
+
+            // Live Screenshot Preview & File Size Validation
+            document.querySelectorAll('.proof-file-input').forEach(input => {
+                input.addEventListener('change', function () {
+                    const container = this.closest('.col-12');
+                    const previewBox = container ? container.querySelector('.screenshot-preview-box') : null;
+                    if (!previewBox) return;
+
+                    const file = this.files[0];
+                    if (!file) {
+                        previewBox.classList.add('d-none');
+                        return;
+                    }
+
+                    // Max size 5MB
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size exceeds the 5MB limit. Please choose a smaller screenshot image.');
+                        this.value = '';
+                        previewBox.classList.add('d-none');
+                        return;
+                    }
+
+                    // Validate image type
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                    if (!validTypes.includes(file.type.toLowerCase())) {
+                        alert('Please select a valid image file (JPG, JPEG, PNG, or WEBP).');
+                        this.value = '';
+                        previewBox.classList.add('d-none');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = previewBox.querySelector('.preview-img');
+                        const filename = previewBox.querySelector('.preview-filename');
+                        const filesize = previewBox.querySelector('.preview-filesize');
+
+                        if (img) img.src = e.target.result;
+                        if (filename) filename.textContent = file.name;
+                        if (filesize) {
+                            const sizeKb = (file.size / 1024).toFixed(1);
+                            filesize.textContent = sizeKb > 1000 ? (sizeKb / 1024).toFixed(2) + ' MB' : sizeKb + ' KB';
+                        }
+                        previewBox.classList.remove('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            // Remove preview handler
+            document.querySelectorAll('.btn-remove-preview').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const container = this.closest('.col-12');
+                    if (!container) return;
+                    const fileInput = container.querySelector('.proof-file-input');
+                    const previewBox = container.querySelector('.screenshot-preview-box');
+                    if (fileInput) fileInput.value = '';
+                    if (previewBox) {
+                        previewBox.classList.add('d-none');
+                        const img = previewBox.querySelector('.preview-img');
+                        if (img) img.src = '';
+                    }
+                });
+            });
+
+            // Form Submit Pre-validation
+            const checkoutForm = document.getElementById('donationCheckoutForm');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function (e) {
+                    const method = paymentMethodInput.value;
+                    if (method === 'JazzCash') {
+                        const tid = document.getElementById('jcTidInput');
+                        const proof = document.getElementById('jcProofInput');
+                        if (!tid.value.trim()) {
+                            alert('Please enter your JazzCash Transaction ID (TID) from your payment receipt.');
+                            tid.focus();
+                            e.preventDefault();
+                            return;
+                        }
+                        if (!proof.files || proof.files.length === 0) {
+                            alert('Please upload a screenshot of your successful JazzCash payment for verification.');
+                            proof.focus();
+                            e.preventDefault();
+                            return;
+                        }
+                    } else if (method === 'Easypaisa') {
+                        const tid = document.getElementById('epTidInput');
+                        const proof = document.getElementById('epProofInput');
+                        if (!tid.value.trim()) {
+                            alert('Please enter your Easypaisa Transaction ID (TID) from your payment receipt.');
+                            tid.focus();
+                            e.preventDefault();
+                            return;
+                        }
+                        if (!proof.files || proof.files.length === 0) {
+                            alert('Please upload a screenshot of your successful Easypaisa payment for verification.');
+                            proof.focus();
+                            e.preventDefault();
+                            return;
+                        }
+                    } else if (method === 'BankTransfer') {
+                        const ref = document.getElementById('bankRefInput');
+                        if (!ref.value.trim()) {
+                            alert('Please enter your deposit slip or bank transfer reference number.');
+                            ref.focus();
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                });
+            }
+
+            // Sidebar Cause details sync
+            const causeSelect = document.getElementById('causeSelectDropdown');
+            const sidebarTitle = document.getElementById('sidebarCauseTitle');
+            const sidebarDesc = document.getElementById('sidebarCauseDesc');
+            const sidebarImg = document.getElementById('sidebarCauseImg');
+            const sidebarTarget = document.getElementById('sidebarTargetAmt');
+            const sidebarRaised = document.getElementById('sidebarRaisedAmt');
+            const sidebarProgress = document.getElementById('sidebarProgressBar');
+
+            function syncSidebar() {
+                const opt = causeSelect.options[causeSelect.selectedIndex];
+                if (!opt) return;
+                sidebarTitle.textContent = opt.text;
+                if (opt.getAttribute('data-desc')) sidebarDesc.textContent = opt.getAttribute('data-desc');
+                if (opt.getAttribute('data-img')) sidebarImg.src = opt.getAttribute('data-img');
+                const target = Number(opt.getAttribute('data-target') || 0);
+                const raised = Number(opt.getAttribute('data-raised') || 0);
+                sidebarTarget.textContent = 'PKR ' + target.toLocaleString();
+                sidebarRaised.textContent = 'PKR ' + raised.toLocaleString();
+                const pct = target > 0 ? Math.min(100, Math.round((raised / target) * 100)) : 0;
+                sidebarProgress.style.width = pct + '%';
+            }
+
+            causeSelect.addEventListener('change', syncSidebar);
+            syncSidebar();
+        });
+    </script>
+}

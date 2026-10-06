@@ -1,0 +1,214 @@
+@model Give_Aid_NGO_Donation_Management_System.Areas.Admin.ViewModels.ReportsViewModel
+@{
+    ViewData["Title"] = "Financial & Impact Reports";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">Financial & Impact Reports</h2>
+        <p class="text-muted small mb-0">Audit-ready ledgers, cause allocations, and transaction volume exports.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2 flex-shrink-0">
+        <a asp-area="Admin" asp-controller="Reports" asp-action="ExportCsv"
+           asp-route-startDate="@Model.StartDate?.ToString("yyyy-MM-dd")"
+           asp-route-endDate="@Model.EndDate?.ToString("yyyy-MM-dd")"
+           asp-route-causeId="@Model.SelectedCauseId"
+           asp-route-paymentMethod="@Model.SelectedPaymentMethod"
+           class="btn btn-outline-success btn-sm fw-semibold">
+            <i class="bi bi-file-earmark-excel me-1"></i> Export to CSV
+        </a>
+        <button type="button" onclick="window.print()" class="btn btn-primary btn-sm">
+            <i class="bi bi-printer me-1"></i> Print / PDF Report
+        </button>
+    </div>
+</div>
+
+<div class="admin-stat-grid mb-4">
+    <div class="card border-0 shadow-sm p-3 h-100 admin-stat-card">
+        <small class="text-muted text-uppercase fw-bold d-block mb-1">Total Period Revenue</small>
+        <h3 class="fw-bold text-success mb-0">PKR @Model.TotalAmount.ToString("N0")</h3>
+    </div>
+    <div class="card border-0 shadow-sm p-3 h-100 admin-stat-card">
+        <small class="text-muted text-uppercase fw-bold d-block mb-1">Total Contributions</small>
+        <h3 class="fw-bold text-primary mb-0">@Model.TotalDonations</h3>
+    </div>
+    <div class="card border-0 shadow-sm p-3 h-100 admin-stat-card">
+        <small class="text-muted text-uppercase fw-bold d-block mb-1">Active Causes Funded</small>
+        <h3 class="fw-bold text-warning mb-0">@Model.CauseSummaries.Count</h3>
+    </div>
+    <div class="card border-0 shadow-sm p-3 h-100 admin-stat-card">
+        <small class="text-muted text-uppercase fw-bold d-block mb-1">Avg Donation Size</small>
+        <h3 class="fw-bold text-dark mb-0">
+            PKR @(Model.TotalDonations > 0 ? (Model.TotalAmount / Model.TotalDonations).ToString("N0") : "0")
+        </h3>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm p-3 p-sm-4 mb-4 no-print">
+    <form method="get" asp-area="Admin" asp-controller="Reports" asp-action="Index" class="row g-2 g-md-3 align-items-end">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <label class="form-label small fw-semibold">Start Date</label>
+            <input type="date" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" class="form-control form-control-sm" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <label class="form-label small fw-semibold">End Date</label>
+            <input type="date" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" class="form-control form-control-sm" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-2">
+            <label class="form-label small fw-semibold">Cause</label>
+            <select name="causeId" class="form-select form-select-sm">
+                <option value="">All Causes</option>
+                @foreach (var c in Model.Causes)
+                {
+                    <option value="@c.Id" selected="@(Model.SelectedCauseId == c.Id)">@c.Title</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-2">
+            <label class="form-label small fw-semibold">Gateway</label>
+            <select name="paymentMethod" class="form-select form-select-sm">
+                <option value="">All Gateways</option>
+                <option value="JazzCash" selected="@(Model.SelectedPaymentMethod == "JazzCash")">JazzCash</option>
+                <option value="Easypaisa" selected="@(Model.SelectedPaymentMethod == "Easypaisa")">Easypaisa</option>
+                <option value="CreditCard" selected="@(Model.SelectedPaymentMethod == "CreditCard")">Credit Card</option>
+            </select>
+        </div>
+        <div class="col-12 col-lg-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm w-100 fw-semibold">
+                <i class="bi bi-funnel me-1"></i> Filter
+            </button>
+            <a asp-area="Admin" asp-controller="Reports" asp-action="Index" class="btn btn-outline-secondary btn-sm flex-shrink-0" title="Clear Filters">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card border-0 shadow-sm p-3 p-sm-4 mb-4">
+    <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-diagram-3-fill me-2 text-primary"></i> Breakdown by Cause</h5>
+
+    <div class="d-md-none d-flex flex-column gap-3">
+        @foreach (var cs in Model.CauseSummaries)
+        {
+            <div class="admin-mobile-card">
+                <div class="fw-semibold mb-2">@cs.CauseTitle</div>
+                <div class="admin-mobile-meta">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Category</span>
+                        <span class="admin-mobile-value"><span class="badge bg-light text-dark border">@cs.Category</span></span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Txns</span>
+                        <span class="admin-mobile-value">@cs.Count</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Raised</span>
+                        <span class="admin-mobile-value fw-bold text-success">PKR @cs.TotalAmount.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="table-responsive admin-table-wrap d-none d-md-block">
+        <table class="table table-hover align-middle mb-0 small">
+            <thead class="table-light">
+                <tr>
+                    <th>Cause Title</th>
+                    <th>Category</th>
+                    <th>Transactions</th>
+                    <th>Total Net Raised</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cs in Model.CauseSummaries)
+                {
+                    <tr>
+                        <td class="fw-semibold">@cs.CauseTitle</td>
+                        <td><span class="badge bg-light text-dark border">@cs.Category</span></td>
+                        <td>@cs.Count</td>
+                        <td class="fw-bold text-success">PKR @cs.TotalAmount.ToString("N0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm overflow-hidden printable-area">
+    <div class="card-header bg-white py-3 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-journal-text me-2 text-success"></i> Transaction Ledger</h5>
+        <span class="badge bg-light text-dark border">@Model.Donations.Count() Records in View</span>
+    </div>
+
+    @if (!Model.Donations.Any())
+    {
+        <div class="p-4 text-center text-muted">No transactions found for this reporting period.</div>
+    }
+    else
+    {
+        <div class="d-md-none d-flex flex-column gap-3 p-3">
+            @foreach (var d in Model.Donations)
+            {
+                <div class="admin-mobile-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <code>@(d.Receipt?.ReceiptNumber ?? $"#{d.Id}")</code>
+                        <span class="fw-bold text-success flex-shrink-0">@d.Currency @d.Amount.ToString("N0")</span>
+                    </div>
+                    <div class="admin-mobile-meta">
+                        <div class="admin-mobile-row">
+                            <span class="admin-mobile-label">Donor</span>
+                            <span class="admin-mobile-value">@(d.IsAnonymous ? "Anonymous Philanthropist" : d.DonorName)</span>
+                        </div>
+                        <div class="admin-mobile-row">
+                            <span class="admin-mobile-label">Email</span>
+                            <span class="admin-mobile-value">@d.DonorEmail</span>
+                        </div>
+                        <div class="admin-mobile-row">
+                            <span class="admin-mobile-label">Cause</span>
+                            <span class="admin-mobile-value">@(d.Cause?.Title ?? "General Welfare")</span>
+                        </div>
+                        <div class="admin-mobile-row">
+                            <span class="admin-mobile-label">Gateway</span>
+                            <span class="admin-mobile-value"><span class="badge bg-light text-dark border">@d.PaymentMethod</span></span>
+                        </div>
+                        <div class="admin-mobile-row">
+                            <span class="admin-mobile-label">Date</span>
+                            <span class="admin-mobile-value text-muted small">@d.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="table-responsive admin-table-wrap d-none d-md-block">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th>Receipt #</th>
+                        <th>Donor Name</th>
+                        <th>Email</th>
+                        <th>Cause</th>
+                        <th>Gateway</th>
+                        <th>Amount (PKR)</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in Model.Donations)
+                    {
+                        <tr>
+                            <td><code>@(d.Receipt?.ReceiptNumber ?? $"#{d.Id}")</code></td>
+                            <td class="fw-semibold">@(d.IsAnonymous ? "Anonymous Philanthropist" : d.DonorName)</td>
+                            <td>@d.DonorEmail</td>
+                            <td>@(d.Cause?.Title ?? "General Welfare")</td>
+                            <td><span class="badge bg-light text-dark border">@d.PaymentMethod</span></td>
+                            <td class="fw-bold text-success">@d.Currency @d.Amount.ToString("N0")</td>
+                            <td class="text-muted">@d.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

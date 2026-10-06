@@ -1,0 +1,206 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Areas.Admin.ViewModels.UserManagementItemViewModel>
+@{
+    ViewData["Title"] = "User & Donor Accounts";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">User & Donor Directory</h2>
+        <p class="text-muted small mb-0">Manage registered donor profiles, role assignments, and account access permissions.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm p-3 p-sm-4 mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-12 col-md-8 col-lg-6">
+            <label for="adminUserSearch" class="form-label small fw-semibold">Search users</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="search" id="adminUserSearch" class="form-control" placeholder="Name, email, city, role..." autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-12 col-md-4 col-lg-3">
+            <small class="text-muted" id="adminUserSearchCount">@Model.Count() user(s)</small>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-4 text-center text-muted">No users found.</div>
+}
+else
+{
+    <!-- Mobile cards -->
+    <div class="d-md-none d-flex flex-column gap-3 mb-4" id="adminUserCards">
+        @foreach (var u in Model)
+        {
+            <div class="admin-mobile-card admin-user-item" data-search="@($"{u.FullName} {u.Email} {u.PhoneNumber} {u.City} {u.Profession} {string.Join(" ", u.Roles)}".ToLowerInvariant())">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                    <div class="min-w-0">
+                        <div class="fw-bold text-primary">@u.FullName</div>
+                        <small class="text-muted">Joined @u.CreatedAt.ToString("MMM dd, yyyy")</small>
+                    </div>
+                    @if (u.IsActive)
+                    {
+                        <span class="badge bg-success flex-shrink-0">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger flex-shrink-0">Deactivated</span>
+                    }
+                </div>
+                <div class="admin-mobile-meta mb-3">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Contact</span>
+                        <span class="admin-mobile-value">
+                            <a href="mailto:@u.Email" class="text-break">@u.Email</a>
+                            <div class="text-muted small">@(string.IsNullOrEmpty(u.PhoneNumber) ? "No phone" : u.PhoneNumber)</div>
+                        </span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">City / Role</span>
+                        <span class="admin-mobile-value">
+                            <div>@(string.IsNullOrEmpty(u.City) ? "-" : u.City)</div>
+                            @foreach (var r in u.Roles)
+                            {
+                                <span class="badge @(r == "SuperAdmin" ? "bg-danger" : (r == "Admin" ? "bg-warning text-dark" : "bg-info text-dark")) me-1">@r</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Lifetime</span>
+                        <span class="admin-mobile-value fw-semibold text-success">PKR @u.TotalDonatedAmount.ToString("N0") <small class="text-muted fw-normal">(@u.TotalDonations)</small></span>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@u.Id" class="btn btn-sm btn-outline-primary flex-grow-1">
+                        <i class="bi bi-eye me-1"></i> Details
+                    </a>
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <a asp-area="Admin" asp-controller="Users" asp-action="EditRoles" asp-route-id="@u.Id" class="btn btn-sm btn-outline-warning flex-grow-1">
+                            <i class="bi bi-shield-lock me-1"></i> Roles
+                        </a>
+                    }
+                    <form asp-area="Admin" asp-controller="Users" asp-action="ToggleActive" asp-route-id="@u.Id" method="post" class="flex-grow-1">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm w-100 @(u.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                            <i class="bi @(u.IsActive ? "bi-person-slash" : "bi-person-check") me-1"></i>
+                            @(u.IsActive ? "Deactivate" : "Activate")
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Desktop table -->
+    <div class="card border-0 shadow-sm overflow-hidden d-none d-md-block">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-hover align-middle mb-0" id="adminUserTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>User / Donor</th>
+                        <th>Contact</th>
+                        <th>City / Profession</th>
+                        <th>Roles</th>
+                        <th>Donation Lifetime</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model)
+                    {
+                        <tr class="admin-user-item" data-search="@($"{u.FullName} {u.Email} {u.PhoneNumber} {u.City} {u.Profession} {string.Join(" ", u.Roles)}".ToLowerInvariant())">
+                            <td>
+                                <div class="fw-bold text-primary">@u.FullName</div>
+                                <small class="text-muted">Joined @u.CreatedAt.ToString("MMM dd, yyyy")</small>
+                            </td>
+                            <td>
+                                <div><a href="mailto:@u.Email">@u.Email</a></div>
+                                <small class="text-muted">@(string.IsNullOrEmpty(u.PhoneNumber) ? "No phone" : u.PhoneNumber)</small>
+                            </td>
+                            <td>
+                                <div>@(string.IsNullOrEmpty(u.City) ? "-" : u.City)</div>
+                                <small class="text-muted">@(string.IsNullOrEmpty(u.Profession) ? "-" : u.Profession)</small>
+                            </td>
+                            <td>
+                                @foreach (var r in u.Roles)
+                                {
+                                    <span class="badge @(r == "SuperAdmin" ? "bg-danger" : (r == "Admin" ? "bg-warning text-dark" : "bg-info text-dark")) me-1">
+                                        @r
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-success">PKR @u.TotalDonatedAmount.ToString("N0")</div>
+                                <small class="text-muted">@u.TotalDonations donation(s)</small>
+                            </td>
+                            <td>
+                                @if (u.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Deactivated</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex flex-wrap justify-content-end gap-1">
+                                    <a asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@u.Id" class="btn btn-sm btn-outline-primary" title="View Profile">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @if (User.IsInRole("SuperAdmin"))
+                                    {
+                                        <a asp-area="Admin" asp-controller="Users" asp-action="EditRoles" asp-route-id="@u.Id" class="btn btn-sm btn-outline-warning" title="Manage Roles">
+                                            <i class="bi bi-shield-lock"></i>
+                                        </a>
+                                    }
+                                    <form asp-area="Admin" asp-controller="Users" asp-action="ToggleActive" asp-route-id="@u.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(u.IsActive ? "btn-outline-danger" : "btn-outline-success")" title="Toggle Account Status">
+                                            <i class="bi @(u.IsActive ? "bi-person-slash" : "bi-person-check")"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('adminUserSearch');
+            const countEl = document.getElementById('adminUserSearchCount');
+            if (!input) return;
+
+            input.addEventListener('input', function () {
+                const q = (this.value || '').trim().toLowerCase();
+                const items = document.querySelectorAll('.admin-user-item');
+                let visible = 0;
+                items.forEach(item => {
+                    const hay = item.getAttribute('data-search') || '';
+                    const show = !q || hay.includes(q);
+                    item.classList.toggle('d-none', !show);
+                    if (show && (item.tagName === 'TR' || item.classList.contains('admin-mobile-card'))) {
+                        // Count unique users once from mobile cards if visible, else from rows
+                    }
+                    if (show) visible++;
+                });
+                // Visible count is doubled (cards + rows). Divide by 2 when both exist.
+                const cardCount = document.querySelectorAll('#adminUserCards .admin-user-item:not(.d-none)').length;
+                const rowCount = document.querySelectorAll('#adminUserTable .admin-user-item:not(.d-none)').length;
+                const shown = Math.max(cardCount, rowCount);
+                if (countEl) countEl.textContent = shown + ' user(s)';
+            });
+        });
+    </script>
+}

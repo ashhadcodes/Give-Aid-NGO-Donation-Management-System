@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Active Humanitarian Causes &amp; Campaigns - Give-AID NGO Welfare & Donation Management System</title>
+    
+    <!-- Instant Theme Bootstrapper (Zero Flash of Unstyled Theme) -->
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('giveaid_theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } catch (e) { }
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- AOS Scroll Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom Site CSS -->
+    <link rel="stylesheet" href="/css/site.css?v=Hb9X1MZ5ka7QcDY_ZjsTwHZOzm-guHyu73JhXgKJqu4" />
+</head>
+<body>
+    <!-- Top Scroll Progress Bar -->
+    <div b-s3m5zxvmbx id="scrollProgressBar"></div>
+
+    <!-- Emergency Appeal Ticker / Top Bar -->
+    <div b-s3m5zxvmbx class="topbar-emergency d-none d-md-block no-print">
+        <div b-s3m5zxvmbx class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div b-s3m5zxvmbx class="d-flex align-items-center gap-2">
+                <span b-s3m5zxvmbx class="badge bg-danger text-white pulse-badge me-1"><i b-s3m5zxvmbx class="bi bi-broadcast me-1"></i> Live Appeal</span>
+                <span b-s3m5zxvmbx class="text-secondary d-none d-xl-inline">Monsoon Emergency Flood Relief Active across Balochistan & Sindh. 100% direct beneficiary allocation.</span>
+                <span b-s3m5zxvmbx class="text-secondary d-inline d-xl-none">Emergency Flood Relief Active.</span>
+                <a class="badge bg-warning text-dark fw-bold text-decoration-none ms-1 ms-xl-2" href="/Donation/Donate">
+                    <i b-s3m5zxvmbx class="bi bi-heart-fill text-danger me-1"></i> Deploy Aid
+                </a>
+            </div>
+            <div b-s3m5zxvmbx class="d-flex align-items-center gap-2 gap-sm-3 small">
+                <span b-s3m5zxvmbx><i b-s3m5zxvmbx class="bi bi-telephone-fill text-warning me-1"></i> +92-51-111-448-324</span>
+                <span b-s3m5zxvmbx class="opacity-25 d-none d-sm-inline">|</span>
+                <span b-s3m5zxvmbx class="d-none d-sm-inline"><i b-s3m5zxvmbx class="bi bi-envelope-fill text-warning me-1"></i> contact@giveaid.org</span>
+                <span b-s3m5zxvmbx class="opacity-25">|</span>
+                <div b-s3m5zxvmbx class="d-flex gap-2.5">
+                    <a b-s3m5zxvmbx href="https://facebook.com" target="_blank" class="text-secondary" aria-label="Facebook"><i b-s3m5zxvmbx class="bi bi-facebook"></i></a>
+                    <a b-s3m5zxvmbx href="https://twitter.com" target="_blank" class="text-secondary" aria-label="Twitter"><i b-s3m5zxvmbx class="bi bi-twitter-x"></i></a>
+                    <a b-s3m5zxvmbx href="https://instagram.com" target="_blank" class="text-secondary" aria-label="Instagram"><i b-s3m5zxvmbx class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar with Clean Responsive Layout -->
+    <header b-s3m5zxvmbx class="sticky-top no-print">
+        <nav b-s3m5zxvmbx class="navbar navbar-expand-lg navbar-giveaid">
+            <div b-s3m5zxvmbx class="container-fluid px-3 px-sm-4 px-xl-5">
+                <!-- Brand Logo with Heartbeat Pulse -->
+                <a class="navbar-brand me-2 me-lg-3" href="/">
+                    <span b-s3m5zxvmbx class="brand-badge"><i b-s3m5zxvmbx class="bi bi-heart-pulse-fill"></i> Give-AID</span>
+                    <span b-s3m5zxvmbx class="d-none d-xxl-inline fw-bold text-secondary fs-6">Welfare System</span>
+                </a>
+                
+                <!-- Mobile Actions Cluster (< 992px: Theme, User/Login, Donate, Hamburger) -->
+                <div b-s3m5zxvmbx class="d-flex align-items-center gap-1.5 gap-sm-2 d-lg-none ms-auto">
+                    <!-- Quick Mobile Theme Switcher Dropdown -->
+                    <div b-s3m5zxvmbx class="dropdown">
+                        <button b-s3m5zxvmbx class="btn btn-outline-secondary btn-sm p-1.5 dropdown-toggle-no-caret" type="button" id="mobileThemeDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Change Theme">
+                            <i b-s3m5zxvmbx class="bi bi-palette-fill text-warning"></i>
+                        </button>
+                        <ul b-s3m5zxvmbx class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="mobileThemeDropdown" style="min-width: 190px;">
+                            <li b-s3m5zxvmbx class="px-3 py-1.5 border-bottom"><small b-s3m5zxvmbx class="fw-bold text-muted text-uppercase">Select Theme</small></li>
+                            <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="light"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#059669;"></span> Clean Light (Default)</button></li>
+                            <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="emerald"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#10b981;"></span> Cyber Emerald</button></li>
+                            <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="indigo"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#6366f1;"></span> Midnight Indigo</button></li>
+                            <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="gold"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#f59e0b;"></span> Royal Gold</button></li>
+                            <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="ocean"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#06b6d4;"></span> Neon Oceanic</button></li>
+                        </ul>
+                    </div>
+
+                        <a class="btn btn-outline-secondary btn-sm px-2 py-1 d-flex align-items-center gap-1" title="Login" href="/Account/Login">
+                            <i b-s3m5zxvmbx class="bi bi-box-arrow-in-right"></i>
+                            <span b-s3m5zxvmbx class="d-none d-sm-inline">Login</span>
+                        </a>
+
+                    <a class="btn btn-warning btn-sm fw-bold px-2.5 py-1 shadow-sm btn-pulse d-flex align-items-center gap-1 text-dark" title="Donate Now" href="/Donation/Donate">
+                        <i b-s3m5zxvmbx class="bi bi-heart-fill text-danger"></i>
+                        <span b-s3m5zxvmbx>Donate</span>
+                    </a>
+
+                    <button b-s3m5zxvmbx class="btn btn-outline-secondary btn-sm p-1.5 ms-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvasNav" aria-controls="mobileOffcanvasNav" aria-label="Toggle navigation">
+                        <i b-s3m5zxvmbx class="bi bi-list fs-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Desktop Navbar Collapse (>= 992px) -->
+                <div b-s3m5zxvmbx class="collapse navbar-collapse d-none d-lg-flex" id="navbarMain">
+                    <ul b-s3m5zxvmbx class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-2 ms-xl-3 align-items-center">
+                        <li b-s3m5zxvmbx class="nav-item">
+                            <a class="nav-link" href="/"><i b-s3m5zxvmbx class="bi bi-house-door-fill"></i> Home</a>
+                        </li>
+                        <li b-s3m5zxvmbx class="nav-item">
+                            <a class="nav-link" href="/Donation"><i b-s3m5zxvmbx class="bi bi-heart-pulse-fill"></i> Causes</a>
+                        </li>
+                        
+                        <!-- About Us Dropdown -->
+                        <li b-s3m5zxvmbx class="nav-item dropdown">
+                            <a b-s3m5zxvmbx class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i b-s3m5zxvmbx class="bi bi-info-circle-fill"></i> About Us
+                            </a>
+                            <ul b-s3m5zxvmbx class="dropdown-menu shadow-lg border-0" aria-labelledby="aboutDropdown">
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/About/WhatWeDo"><i b-s3m5zxvmbx class="bi bi-grid-fill text-primary me-2"></i> What We Do</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/About/OurMission"><i b-s3m5zxvmbx class="bi bi-compass-fill text-success me-2"></i> Our Mission</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/About/OurTeam"><i b-s3m5zxvmbx class="bi bi-people-fill text-info me-2"></i> Leadership Team</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/About/Career"><i b-s3m5zxvmbx class="bi bi-briefcase-fill text-warning me-2"></i> Careers With Us</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/About/Achievements"><i b-s3m5zxvmbx class="bi bi-trophy-fill text-danger me-2"></i> Achievements & Impact</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/About/Supporters"><i b-s3m5zxvmbx class="bi bi-award-fill text-secondary me-2"></i> Corporate Supporters</a></li>
+                                <li b-s3m5zxvmbx><hr b-s3m5zxvmbx class="dropdown-divider"></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2 fw-semibold" href="/About/ReadAboutUs"><i b-s3m5zxvmbx class="bi bi-book-half text-warning me-2"></i> Transparency Charter</a></li>
+                            </ul>
+                        </li>
+
+                        <li b-s3m5zxvmbx class="nav-item">
+                            <a class="nav-link" href="/Programmes"><i b-s3m5zxvmbx class="bi bi-calendar-event-fill"></i> Programmes</a>
+                        </li>
+
+                        <!-- More Dropdown (NGOs, Partners, Gallery, Help Centre, Contact Us) -->
+                        <li b-s3m5zxvmbx class="nav-item dropdown">
+                            <a b-s3m5zxvmbx class="nav-link dropdown-toggle" href="#" id="moreNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i b-s3m5zxvmbx class="bi bi-grid-3x3-gap-fill"></i> More
+                            </a>
+                            <ul b-s3m5zxvmbx class="dropdown-menu shadow-lg border-0" aria-labelledby="moreNavDropdown">
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/Ngos"><i b-s3m5zxvmbx class="bi bi-buildings-fill text-primary me-2"></i> Partner NGOs</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/Home/Partners"><i b-s3m5zxvmbx class="bi bi-handshake-fill text-secondary me-2"></i> Corporate Partners</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/Home/Gallery"><i b-s3m5zxvmbx class="bi bi-images text-warning me-2"></i> Media Gallery</a></li>
+                                <li b-s3m5zxvmbx><hr b-s3m5zxvmbx class="dropdown-divider"></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/HelpCentre"><i b-s3m5zxvmbx class="bi bi-question-circle-fill text-info me-2"></i> Help Centre & FAQs</a></li>
+                                <li b-s3m5zxvmbx><a class="dropdown-item py-2" href="/Contact"><i b-s3m5zxvmbx class="bi bi-envelope-fill text-success me-2"></i> Contact Us</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Desktop Actions Cluster (Theme Switcher + Admin + User/Account + Donate Now) -->
+                    <div b-s3m5zxvmbx class="d-flex align-items-center gap-2 gap-xl-2.5 ms-auto flex-shrink-0">
+                        <!-- Desktop Theme Switcher Dropdown -->
+                        <div b-s3m5zxvmbx class="dropdown">
+                            <button b-s3m5zxvmbx class="theme-selector-btn dropdown-toggle" type="button" id="desktopThemeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i b-s3m5zxvmbx class="bi bi-palette-fill text-warning"></i>
+                                <span b-s3m5zxvmbx class="d-none d-xl-inline theme-name-label">Theme</span>
+                            </button>
+                            <ul b-s3m5zxvmbx class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="desktopThemeDropdown" style="min-width: 200px;">
+                                <li b-s3m5zxvmbx class="px-3 py-1.5 border-bottom"><small b-s3m5zxvmbx class="fw-bold text-muted text-uppercase">Choose Theme</small></li>
+                                <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="light"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#059669;"></span> Clean Light (Default)</button></li>
+                                <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="emerald"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#10b981;"></span> Cyber Emerald</button></li>
+                                <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="indigo"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#6366f1;"></span> Midnight Indigo</button></li>
+                                <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="gold"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#f59e0b;"></span> Royal Gold</button></li>
+                                <li b-s3m5zxvmbx><button b-s3m5zxvmbx type="button" class="dropdown-item py-2 theme-switch-btn" data-theme="ocean"><span b-s3m5zxvmbx class="theme-color-dot me-2" style="background:#06b6d4;"></span> Neon Oceanic</button></li>
+                            </ul>
+                        </div>
+
+                            <a class="btn btn-outline-secondary btn-sm px-2.5 py-1.5 d-inline-flex align-items-center gap-1" title="Sign In" href="/Account/Login">
+                                <i b-s3m5zxvmbx class="bi bi-box-arrow-in-right"></i>
+                                <span b-s3m5zxvmbx>Login</span>
+                            </a>
+                            <a class="btn btn-outline-primary btn-sm px-2.5 py-1.5 d-inline-flex align-items-center gap-1" title="Create Account" href="/Account/Register">
+                                <i b-s3m5zxvmbx class="bi bi-person-plus"></i>
+                                <span b-s3m5zxvmbx>Register</span>
+                            </a>
+
+                        <a class="btn btn-warning btn-sm fw-bold px-3 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-sm btn-pulse text-dark" title="Make a Donation" href="/Donation/Donate">
+                            <i b-s3m5zxvmbx class="bi bi-heart-fill text-danger"></i>
+                            <span b-s3m5zxvmbx>Donate Now</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Offcanvas Navigation Drawer (Light, Clean, Fully Responsive) -->
+    <div b-s3m5zxvmbx class="offcanvas offcanvas-end offcanvas-giveaid d-lg-none no-print" tabindex="-1" id="mobileOffcanvasNav" aria-labelledby="mobileOffcanvasLabel">
+        <div b-s3m5zxvmbx class="offcanvas-header border-bottom px-4 py-3 bg-light">
+            <div b-s3m5zxvmbx class="d-flex align-items-center gap-2" id="mobileOffcanvasLabel">
+                <span b-s3m5zxvmbx class="brand-badge bg-success text-white px-2.5 py-1 rounded fw-bold fs-6">
+                    <i b-s3m5zxvmbx class="bi bi-heart-pulse-fill"></i> Give-AID
+                </span>
+                <span b-s3m5zxvmbx class="fw-bold text-dark fs-6">Navigation Menu</span>
+            </div>
+            <button b-s3m5zxvmbx type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div b-s3m5zxvmbx class="offcanvas-body d-flex flex-column justify-content-between p-3 p-sm-4 bg-white">
+            <div b-s3m5zxvmbx>
+                <!-- User Profile Header if Authenticated -->
+                    <div b-s3m5zxvmbx class="p-3 bg-light rounded-3 mb-3 border">
+                        <div b-s3m5zxvmbx class="d-flex align-items-center justify-content-between mb-2">
+                            <span b-s3m5zxvmbx class="text-secondary small fw-semibold">Welcome to Give-AID</span>
+                            <span b-s3m5zxvmbx class="badge bg-success-subtle text-success">Verified NGO</span>
+                        </div>
+                        <div b-s3m5zxvmbx class="row g-2">
+                            <div b-s3m5zxvmbx class="col-6">
+                                <a class="btn btn-outline-secondary btn-sm w-100 fw-semibold" href="/Account/Login">
+                                    <i b-s3m5zxvmbx class="bi bi-box-arrow-in-right me-1"></i> Login
+                                </a>
+                            </div>
+                            <div b-s3m5zxvmbx class="col-6">
+                                <a class="btn btn-outline-primary btn-sm w-100 fw-semibold" href="/Account/Register">
+                                    <i b-s3m5zxvmbx class="bi bi-person-plus me-1"></i> Register
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- Complete Navigation Links List -->
+                <ul b-s3m5zxvmbx class="nav flex-column gap-1">
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/">
+                            <i b-s3m5zxvmbx class="bi bi-house-door-fill text-primary me-2"></i> Home Overview
+                        </a>
+                    </li>
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/Donation">
+                            <i b-s3m5zxvmbx class="bi bi-heart-pulse-fill text-danger me-2"></i> Active Giving Causes
+                        </a>
+                    </li>
+                    
+                    <!-- Mobile About Accordion -->
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <div b-s3m5zxvmbx class="accordion accordion-flush" id="aboutAccordionMobile">
+                            <div b-s3m5zxvmbx class="accordion-item border-0 bg-transparent">
+                                <h2 b-s3m5zxvmbx class="accordion-header" id="flush-headingOne">
+                                    <button b-s3m5zxvmbx class="accordion-button collapsed px-3 py-2 text-secondary fw-semibold bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbout" aria-expanded="false" aria-controls="flush-collapseAbout">
+                                        <i b-s3m5zxvmbx class="bi bi-info-circle-fill text-info me-2"></i> About Give-AID
+                                    </button>
+                                </h2>
+                                <div b-s3m5zxvmbx id="flush-collapseAbout" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#aboutAccordionMobile">
+                                    <div b-s3m5zxvmbx class="accordion-body ps-4 py-1 d-flex flex-column gap-1">
+                                        <a class="nav-link py-1.5 text-secondary" href="/About/WhatWeDo"><i b-s3m5zxvmbx class="bi bi-grid-fill text-primary me-2"></i> What We Do</a>
+                                        <a class="nav-link py-1.5 text-secondary" href="/About/OurMission"><i b-s3m5zxvmbx class="bi bi-compass-fill text-success me-2"></i> Our Mission</a>
+                                        <a class="nav-link py-1.5 text-secondary" href="/About/OurTeam"><i b-s3m5zxvmbx class="bi bi-people-fill text-info me-2"></i> Leadership Team</a>
+                                        <a class="nav-link py-1.5 text-secondary" href="/About/Career"><i b-s3m5zxvmbx class="bi bi-briefcase-fill text-warning me-2"></i> Careers</a>
+                                        <a class="nav-link py-1.5 text-secondary" href="/About/Achievements"><i b-s3m5zxvmbx class="bi bi-trophy-fill text-danger me-2"></i> Achievements</a>
+                                        <a class="nav-link py-1.5 text-secondary" href="/About/Supporters"><i b-s3m5zxvmbx class="bi bi-award-fill text-secondary me-2"></i> Supporters</a>
+                                        <a class="nav-link py-1.5 fw-bold text-dark" href="/About/ReadAboutUs"><i b-s3m5zxvmbx class="bi bi-book-half text-warning me-2"></i> Transparency Charter</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/Programmes">
+                            <i b-s3m5zxvmbx class="bi bi-calendar-event-fill text-primary me-2"></i> Programmes & Drives
+                        </a>
+                    </li>
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/Ngos">
+                            <i b-s3m5zxvmbx class="bi bi-buildings-fill text-danger me-2"></i> Partner NGOs
+                        </a>
+                    </li>
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/Home/Partners">
+                            <i b-s3m5zxvmbx class="bi bi-handshake-fill text-secondary me-2"></i> Corporate Partners
+                        </a>
+                    </li>
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/Home/Gallery">
+                            <i b-s3m5zxvmbx class="bi bi-images text-warning me-2"></i> Media Gallery
+                        </a>
+                    </li>
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/HelpCentre">
+                            <i b-s3m5zxvmbx class="bi bi-question-circle-fill text-info me-2"></i> Help Centre & FAQs
+                        </a>
+                    </li>
+                    <li b-s3m5zxvmbx class="nav-item">
+                        <a class="nav-link text-secondary" href="/Contact">
+                            <i b-s3m5zxvmbx class="bi bi-envelope-fill text-success me-2"></i> Contact Us
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Mobile Theme Switcher Box -->
+                <div b-s3m5zxvmbx class="mt-3 p-3 bg-light rounded-3 border">
+                    <small b-s3m5zxvmbx class="fw-bold text-muted text-uppercase d-block mb-2"><i b-s3m5zxvmbx class="bi bi-palette-fill text-warning me-1"></i> Color Theme</small>
+                    <div b-s3m5zxvmbx class="d-grid gap-1.5" style="grid-template-columns: repeat(2, 1fr);">
+                        <button b-s3m5zxvmbx type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="light">
+                            <span b-s3m5zxvmbx class="theme-color-dot" style="background:#059669;"></span>
+                            <span b-s3m5zxvmbx class="small fw-semibold">Clean Light</span>
+                        </button>
+                        <button b-s3m5zxvmbx type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="emerald">
+                            <span b-s3m5zxvmbx class="theme-color-dot" style="background:#10b981;"></span>
+                            <span b-s3m5zxvmbx class="small fw-semibold">Emerald</span>
+                        </button>
+                        <button b-s3m5zxvmbx type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="indigo">
+                            <span b-s3m5zxvmbx class="theme-color-dot" style="background:#6366f1;"></span>
+                            <span b-s3m5zxvmbx class="small fw-semibold">Indigo</span>
+                        </button>
+                        <button b-s3m5zxvmbx type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="gold">
+                            <span b-s3m5zxvmbx class="theme-color-dot" style="background:#f59e0b;"></span>
+                            <span b-s3m5zxvmbx class="small fw-semibold">Royal Gold</span>
+                        </button>
+                        <button b-s3m5zxvmbx type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5 py-1.5 px-2 text-start theme-switch-btn" data-theme="ocean" style="grid-column: span 2;">
+                            <span b-s3m5zxvmbx class="theme-color-dot" style="background:#06b6d4;"></span>
+                            <span b-s3m5zxvmbx class="small fw-semibold">Neon Oceanic</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div b-s3m5zxvmbx class="mt-3 pt-3 border-top">
+                <a class="btn btn-warning w-100 fw-bold py-2.5 mb-2 shadow-sm btn-pulse text-dark" href="/Donation/Donate">
+                    <i b-s3m5zxvmbx class="bi bi-heart-fill text-danger me-1"></i> Donate Online Now
+                </a>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main b-s3m5zxvmbx role="main">
+        <div b-s3m5zxvmbx class="container mt-2">
+            
+
+
+        </div>
+        
+<div class="container py-4 py-md-5">
+    <!-- Header Section -->
+    <div class="text-center max-w-2xl mx-auto mb-4 mb-md-5" data-aos="fade-up">
+        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1.5 rounded-pill mb-2">
+            <i class="bi bi-heart-pulse-fill me-1"></i> Give-AID Directory
+        </span>
+        <h1 class="display-5 fw-bold mb-2 text-dark">Verified Welfare Causes</h1>
+        <p class="text-secondary mb-0">Choose a certified cause that inspires you. 100% of your contribution reaches verified ground operations with transparent audit trails.</p>
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4 mb-lg-5 rounded-4" data-aos="fade-up">
+        <form method="get" class="row g-2 g-md-3 align-items-center" action="/Donation">
+            <div class="col-lg-5 col-md-5 col-12">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="searchString" class="form-control border-start-0" placeholder="Search by title, location, category..." />
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                <select name="category" class="form-select">
+                    <option value="">All Welfare Categories</option>
+                        <option value="Children">Children</option>
+                        <option value="Disabled Persons">Disabled Persons</option>
+                        <option value="Education">Education</option>
+                        <option value="Elderly">Elderly</option>
+                        <option value="Emergency">Emergency</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Women">Women</option>
+                        <option value="Youth">Youth</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                    <i class="bi bi-funnel-fill me-1"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Causes Grid: Desktop >= 1200px (4), Tablet 768-1199 (2), Mobile < 768 (1) -->
+    <div class="card-grid-responsive" id="causesGrid">
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Children Welfare &amp; Protection" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-person-heart text-success me-1"></i> Children
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">CHILD-WELFARE</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/1">
+                                    Children Welfare &amp; Protection
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Providing nutrition, essential healthcare, clean shelter, and psychological rehabilitation for underprivileged...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 1,485,000</span>
+                                    <span class="text-muted">Goal: PKR 2,500,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 59%;" aria-valuenow="59" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">59% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=1">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/1">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Education for Every Child" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-mortarboard-fill text-success me-1"></i> Education
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">EDU-FOR-ALL</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/2">
+                                    Education for Every Child
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Funding school tuition fees, modern textbooks, STEM learning kits, and school uniform kits for bright students...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 1,890,000</span>
+                                    <span class="text-muted">Goal: PKR 3,000,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 63%;" aria-valuenow="63" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">63% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=2">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/2">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1516307365426-bea591f05011?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Disabled Persons Empowerment" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-heart-fill text-success me-1"></i> Disabled Persons
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">DISABLE-CARE</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/3">
+                                    Disabled Persons Empowerment
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Supplying high-quality wheelchairs, prosthetic limbs, hearing aids, and accessible vocational technology for d...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 920,000</span>
+                                    <span class="text-muted">Goal: PKR 1,800,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 51%;" aria-valuenow="51" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">51% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=3">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/3">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Women Welfare &amp; Micro-Enterprise" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-heart-fill text-success me-1"></i> Women
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">WOMEN-EMPOWER</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/4">
+                                    Women Welfare &amp; Micro-Enterprise
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Equipping widows and aspiring female entrepreneurs with sewing machines, digital literacy workshops, micro-gra...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 1,120,000</span>
+                                    <span class="text-muted">Goal: PKR 2,000,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 56%;" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">56% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=4">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/4">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Youth Welfare &amp; Skill Development" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-heart-fill text-success me-1"></i> Youth
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">YOUTH-SKILLS</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/5">
+                                    Youth Welfare &amp; Skill Development
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Empowering young men and women with IT certifications, software development bootcamps, and career counseling t...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 640,000</span>
+                                    <span class="text-muted">Goal: PKR 1,500,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 43%;" aria-valuenow="43" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">43% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=5">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/5">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Elderly Welfare &amp; Healthcare" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-heart-fill text-success me-1"></i> Elderly
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">ELDERLY-CARE</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/6">
+                                    Elderly Welfare &amp; Healthcare
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Monthly geriatric healthcare packs, specialized cardiac and diabetic medicines, and compassionate hospice care...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 780,000</span>
+                                    <span class="text-muted">Goal: PKR 1,200,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">65% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=6">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/6">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Emergency Relief &amp; Flood Aid" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-life-preserver text-success me-1"></i> Emergency
+                                </span>
+                                    <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill shadow-sm fw-semibold">
+                                        <i class="bi bi-fire me-1"></i> Urgent
+                                    </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">EMERGENCY-RELIEF</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/7">
+                                    Emergency Relief &amp; Flood Aid
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Rapid response distribution of dry food rations, clean drinking water tanks, waterproof family tents, and emer...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 3,450,000</span>
+                                    <span class="text-muted">Goal: PKR 5,000,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 69%;" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">69% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=7">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/7">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cause-grid-item d-flex" data-aos="fade-up">
+                    <div class="card h-100 w-100 card-hover border-0 shadow-sm d-flex flex-column rounded-4 cause-card bg-white">
+                        <!-- Controlled 16:9 Image -->
+                        <div class="position-relative card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=800&amp;auto=format&amp;fit=crop&amp;q=80" 
+                                 class="card-img-top" alt="Free Medical &amp; Eye Surgical Camps" loading="lazy">
+                            <div class="card-badge-overlay position-absolute top-0 start-0 end-0 d-flex justify-content-between align-items-start p-2.5">
+                                <span class="badge bg-white text-dark shadow-sm px-2.5 py-1 rounded-pill fw-semibold">
+                                    <i class="bi bi-heart-pulse-fill text-success me-1"></i> Healthcare
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="card-body p-3 p-xl-3.5 d-flex flex-column flex-grow-1">
+                            <!-- Location & Code Metadata -->
+                            <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                <span><i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan</span>
+                                <span class="badge bg-light text-secondary border">HEALTH-CARE</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2 text-dark card-title-hover">
+                                <a class="text-decoration-none text-dark" href="/Donation/Details/8">
+                                    Free Medical &amp; Eye Surgical Camps
+                                </a>
+                            </h5>
+
+                            <!-- Short readable description (wraps naturally, no ellipsis clipping) -->
+                            <p class="text-secondary small mb-3 flex-grow-1 lh-base">
+                                Conducting mobile outpatient clinics, diagnostic laboratory screenings, and free cataract replacement surgerie...
+                            </p>
+
+                            <!-- Progress & Funding Metrics (Single goal display, sleek progress bar) -->
+                            <div class="cause-progress-wrapper mt-auto mb-3">
+                                <div class="d-flex justify-content-between align-items-baseline small mb-1">
+                                    <span class="fw-bold text-success">PKR 1,350,000</span>
+                                    <span class="text-muted">Goal: PKR 2,200,000</span>
+                                </div>
+                                <div class="progress progress-giveaid">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 61%;" aria-valuenow="61" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted fw-semibold">61% Funded</small>
+                                    <small class="text-success fw-semibold">Tax-Deductible</small>
+                                </div>
+                            </div>
+
+                            <!-- Balanced Dual Action Buttons -->
+                            <div class="row g-2 pt-2 border-top">
+                                <div class="col-7">
+                                    <a class="btn btn-primary w-100 fw-bold py-2 btn-sm d-inline-flex align-items-center justify-content-center gap-1" href="/Donation/Donate?causeId=8">
+                                        <i class="bi bi-heart-fill text-white"></i>
+                                        <span>Donate</span>
+                                    </a>
+                                </div>
+                                <div class="col-5">
+                                    <a class="btn btn-outline-secondary w-100 fw-semibold py-2 btn-sm d-inline-flex align-items-center justify-content-center" href="/Donation/Details/8">
+                                        <span>Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </div>
+</div>
+
+    </main>
+
+    <!-- Floating Action Button for Fast Donation -->
+    <a class="fab-donate-floating no-print" title="Make an Instant Donation" href="/Donation/Donate">
+        <i b-s3m5zxvmbx class="bi bi-heart-fill text-danger"></i>
+        <span b-s3m5zxvmbx>Fast Donate</span>
+    </a>
+
+    <!-- Back to Top Button -->
+    <div b-s3m5zxvmbx class="back-to-top no-print" id="backToTopBtn" title="Back to Top">
+        <i b-s3m5zxvmbx class="bi bi-arrow-up"></i>
+    </div>
+
+    <!-- Footer -->
+    <footer b-s3m5zxvmbx class="footer-giveaid no-print">
+        <div b-s3m5zxvmbx class="container">
+            <div b-s3m5zxvmbx class="row g-4">
+                <div b-s3m5zxvmbx class="col-lg-4 col-md-6">
+                    <div b-s3m5zxvmbx class="d-flex align-items-center gap-2 mb-3">
+                        <span b-s3m5zxvmbx class="brand-badge bg-success text-white px-2 py-1 rounded fw-bold fs-5"><i b-s3m5zxvmbx class="bi bi-heart-pulse-fill"></i> Give-AID</span>
+                    </div>
+                    <p b-s3m5zxvmbx class="small text-muted mb-4">
+                        Give-AID is a unified welfare ecosystem connecting compassionate individuals, institutional philanthropists, and vetted grassroots NGOs to eliminate poverty, advance education, support special needs, and provide rapid disaster relief.
+                    </p>
+                    <div b-s3m5zxvmbx class="d-flex gap-3 fs-5 mb-4">
+                        <a b-s3m5zxvmbx href="https://facebook.com" target="_blank" class="footer-social-icon" aria-label="Facebook"><i b-s3m5zxvmbx class="bi bi-facebook"></i></a>
+                        <a b-s3m5zxvmbx href="https://twitter.com" target="_blank" class="footer-social-icon" aria-label="Twitter"><i b-s3m5zxvmbx class="bi bi-twitter-x"></i></a>
+                        <a b-s3m5zxvmbx href="https://instagram.com" target="_blank" class="footer-social-icon" aria-label="Instagram"><i b-s3m5zxvmbx class="bi bi-instagram"></i></a>
+                        <a b-s3m5zxvmbx href="https://linkedin.com" target="_blank" class="footer-social-icon" aria-label="LinkedIn"><i b-s3m5zxvmbx class="bi bi-linkedin"></i></a>
+                        <a b-s3m5zxvmbx href="https://youtube.com" target="_blank" class="footer-social-icon" aria-label="YouTube"><i b-s3m5zxvmbx class="bi bi-youtube"></i></a>
+                    </div>
+
+                    <div b-s3m5zxvmbx class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-light border small">
+                        <span b-s3m5zxvmbx class="badge rounded-pill bg-success p-1"> </span>
+                        <span b-s3m5zxvmbx class="text-secondary">All Gateways Active (JazzCash, Easypaisa, Cards)</span>
+                    </div>
+                </div>
+
+                <div b-s3m5zxvmbx class="col-lg-2 col-md-6 col-sm-6">
+                    <h5 b-s3m5zxvmbx>Explore Causes</h5>
+                    <ul b-s3m5zxvmbx class="list-unstyled small d-flex flex-column gap-2">
+                        <li b-s3m5zxvmbx><a href="/">Home Overview</a></li>
+                        <li b-s3m5zxvmbx><a href="/Donation">Active Giving Causes</a></li>
+                        <li b-s3m5zxvmbx><a href="/Programmes">Welfare Programmes</a></li>
+                        <li b-s3m5zxvmbx><a href="/Ngos">Verified NGOs</a></li>
+                        <li b-s3m5zxvmbx><a href="/Home/Partners">Corporate Partners</a></li>
+                        <li b-s3m5zxvmbx><a href="/Home/Gallery">Photo Gallery</a></li>
+                    </ul>
+                </div>
+
+                <div b-s3m5zxvmbx class="col-lg-3 col-md-6 col-sm-6">
+                    <h5 b-s3m5zxvmbx>Transparency & NGO</h5>
+                    <ul b-s3m5zxvmbx class="list-unstyled small d-flex flex-column gap-2">
+                        <li b-s3m5zxvmbx><a href="/About/WhatWeDo">What We Do</a></li>
+                        <li b-s3m5zxvmbx><a href="/About/OurMission">Mission & Vision</a></li>
+                        <li b-s3m5zxvmbx><a href="/About/OurTeam">Leadership & Board</a></li>
+                        <li b-s3m5zxvmbx><a href="/About/Career">Careers & Volunteering</a></li>
+                        <li b-s3m5zxvmbx><a href="/About/Achievements">Impact Achievements</a></li>
+                        <li b-s3m5zxvmbx><a href="/HelpCentre">Help Centre & FAQs</a></li>
+                    </ul>
+                </div>
+
+                <div b-s3m5zxvmbx class="col-lg-3 col-md-6">
+                    <h5 b-s3m5zxvmbx>Contact Headquarters</h5>
+                    <p b-s3m5zxvmbx class="small text-muted mb-2"><i b-s3m5zxvmbx class="bi bi-geo-alt-fill text-danger me-2"></i> Give-AID Tower, Sector G-8 Markaz, Islamabad, Pakistan</p>
+                    <p b-s3m5zxvmbx class="small text-muted mb-2"><i b-s3m5zxvmbx class="bi bi-telephone-fill text-success me-2"></i> +92-51-111-448-324</p>
+                    <p b-s3m5zxvmbx class="small text-muted mb-3"><i b-s3m5zxvmbx class="bi bi-envelope-fill text-warning me-2"></i> contact@giveaid.org</p>
+                    <div b-s3m5zxvmbx class="p-3 bg-light rounded border">
+                        <small b-s3m5zxvmbx class="text-dark fw-bold d-block mb-1"><i b-s3m5zxvmbx class="bi bi-shield-lock-fill text-success me-1"></i> 100% Traceable Donations</small>
+                        <small b-s3m5zxvmbx class="text-muted d-block">Secured with 256-bit encryption. Instant verifiable receipts generated for every contribution.</small>
+                    </div>
+                </div>
+            </div>
+
+            <hr b-s3m5zxvmbx class="border-secondary my-4 opacity-25" />
+
+            <div b-s3m5zxvmbx class="row align-items-center">
+                <div b-s3m5zxvmbx class="col-md-6 text-center text-md-start small">
+                    &copy; 2026 Give-AID NGO Welfare & Donation Management System. All rights reserved.
+                </div>
+                <div b-s3m5zxvmbx class="col-md-6 text-center text-md-end small mt-2 mt-md-0">
+                    <a class="text-muted me-3" href="/Home/Privacy">Privacy Policy</a>
+                    <a class="text-muted" href="/Contact">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Bundle & Animation Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 50
+        });
+    </script>
+
+    <!-- Custom Master Site JS -->
+    <script src="/js/site.js?v=3Nm40PT0f2YDOMeDv20GaPyLiWSeQoME2l49VNe6W-Q"></script>
+    
+</body>
+</html>

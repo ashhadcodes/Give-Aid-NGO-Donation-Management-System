@@ -1,0 +1,71 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.ContactMessage
+@{
+    ViewData["Title"] = $"Message from {Model.Name}";
+}
+
+<div class="mb-4">
+    <a asp-area="Admin" asp-controller="ContactMessages" asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Messages
+    </a>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 admin-page-header">
+        <div class="min-w-0">
+            <h2 class="fw-bold mb-1">Message Details</h2>
+            <p class="text-muted small mb-0">Received on @Model.CreatedAt.ToString("MMMM dd, yyyy 'at' hh:mm tt")</p>
+        </div>
+        <form asp-area="Admin" asp-controller="ContactMessages" asp-action="Archive" asp-route-id="@Model.Id" method="post" class="flex-shrink-0">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-archive me-1"></i> Archive Message
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-7">
+        <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-2 mb-3">
+                <h5 class="fw-bold text-primary mb-0 min-w-0">@Model.Subject</h5>
+                <span class="badge @(Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.MessageStatus.Replied ? "bg-success" : "bg-warning text-dark") flex-shrink-0">
+                    @Model.Status
+                </span>
+            </div>
+
+            <div class="bg-light p-3 rounded mb-3">
+                <div class="row g-2 small">
+                    <div class="col-sm-6 col-12"><strong>Sender:</strong> @Model.Name</div>
+                    <div class="col-sm-6 col-12"><strong>Email:</strong> <a href="mailto:@Model.Email">@Model.Email</a></div>
+                    <div class="col-sm-6 col-12"><strong>Phone:</strong> @(string.IsNullOrEmpty(Model.Phone) ? "Not provided" : Model.Phone)</div>
+                    <div class="col-sm-6 col-12"><strong>Date:</strong> @Model.CreatedAt.ToString("g")</div>
+                </div>
+            </div>
+
+            <h6 class="fw-bold text-muted small text-uppercase">Message Content</h6>
+            <div class="p-3 border rounded bg-white" style="white-space: pre-wrap; min-height: 120px;">@Model.Message</div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.AdminNotes))
+        {
+            <div class="card border-0 shadow-sm p-3 p-sm-4 border-start border-success border-4">
+                <h6 class="fw-bold text-success mb-2"><i class="bi bi-reply-fill me-1"></i> Recorded Reply (@(Model.RepliedAt?.ToString("g") ?? "N/A"))</h6>
+                <div class="p-3 border rounded bg-white" style="white-space: pre-wrap;">@Model.AdminNotes</div>
+            </div>
+        }
+    </div>
+
+    <div class="col-12 col-lg-5">
+        <div class="card border-0 shadow-sm p-3 p-sm-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-reply-all-fill me-2 text-primary"></i> Reply to Sender</h5>
+            <form asp-area="Admin" asp-controller="ContactMessages" asp-action="Reply" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Your Reply</label>
+                    <textarea name="replyText" class="form-control" rows="8" required placeholder="Type your official response..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold">
+                    <i class="bi bi-send-fill me-1"></i> Send Reply
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

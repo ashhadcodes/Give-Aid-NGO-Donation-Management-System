@@ -1,0 +1,103 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.AboutPage
+@{
+    ViewData["Title"] = $"{Model.Title} - About Give-AID";
+}
+
+<div class="container py-4 py-md-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="About" asp-action="WhatWeDo">About Us</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm p-3 sticky-lg-top" style="top: 90px;">
+                <h6 class="text-uppercase text-muted fw-bold px-3 py-2 small mb-1">About Give-AID</h6>
+                <div class="nav flex-column nav-pills gap-1">
+                    <a class="nav-link @(Model.SectionKey == "what-we-do" ? "active" : "")" asp-controller="About" asp-action="WhatWeDo">
+                        <i class="bi bi-grid-fill me-2"></i> What We Do
+                    </a>
+                    <a class="nav-link @(Model.SectionKey == "our-mission" ? "active" : "")" asp-controller="About" asp-action="OurMission">
+                        <i class="bi bi-compass-fill me-2"></i> Our Mission
+                    </a>
+                    <a class="nav-link @(Model.SectionKey == "our-team" ? "active" : "")" asp-controller="About" asp-action="OurTeam">
+                        <i class="bi bi-people-fill me-2"></i> Leadership Team
+                    </a>
+                    <a class="nav-link @(Model.SectionKey == "career" ? "active" : "")" asp-controller="About" asp-action="Career">
+                        <i class="bi bi-briefcase-fill me-2"></i> Careers With Us
+                    </a>
+                    <a class="nav-link @(Model.SectionKey == "achievements" ? "active" : "")" asp-controller="About" asp-action="Achievements">
+                        <i class="bi bi-trophy-fill me-2"></i> Achievements
+                    </a>
+                    <a class="nav-link @(Model.SectionKey == "supporters" ? "active" : "")" asp-controller="About" asp-action="Supporters">
+                        <i class="bi bi-award-fill me-2"></i> Corporate Supporters
+                    </a>
+                    <a class="nav-link @(Model.SectionKey == "read-about-us" || Model.SectionKey == "charter" ? "active" : "")" asp-controller="About" asp-action="ReadAboutUs">
+                        <i class="bi bi-book-half me-2"></i> Transparency Charter
+                    </a>
+                </div>
+
+                <hr class="my-3 opacity-25" />
+
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <h6 class="fw-bold mb-1">Need Urgent Help?</h6>
+                    <p class="small text-muted mb-2">Our support desk is available 24/7 for donors and partners.</p>
+                    <a asp-controller="HelpCentre" asp-action="Index" class="btn btn-sm btn-outline-primary w-100">Help Centre</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Article / Content Column -->
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm p-3 p-sm-4 p-md-5">
+                @if (!string.IsNullOrEmpty(Model.BannerImageUrl))
+                {
+                    <div class="mb-4 rounded-4 overflow-hidden shadow-sm" style="max-height: 380px;">
+                        <img src="@Model.BannerImageUrl" class="w-100 h-100 object-fit-cover" alt="@Model.Title" />
+                    </div>
+                }
+
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <span class="badge bg-success-subtle text-success fw-bold px-3 py-1.5 rounded-pill">
+                        <i class="bi bi-shield-check me-1"></i> Official Give-AID Documentation
+                    </span>
+                    <small class="text-muted"><i class="bi bi-clock me-1"></i> Updated @Model.LastModifiedAt.ToString("MMM dd, yyyy")</small>
+                </div>
+
+                <h1 class="display-6 fw-bold mb-2">@Model.Title</h1>
+                @if (!string.IsNullOrEmpty(Model.Subtitle))
+                {
+                    <p class="lead text-primary fw-semibold mb-4">@Model.Subtitle</p>
+                }
+
+                <hr class="mb-4 opacity-25" />
+
+                <!-- HTML / Markdown Rendered Content -->
+                <div class="cms-rendered-content text-secondary lh-lg mb-5">
+                    @Html.Raw(Model.Content)
+                </div>
+
+                <!-- Call to Action Footer -->
+                <div class="p-4 bg-light rounded-4 border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div>
+                        <h5 class="fw-bold mb-1">Support Our Ongoing Missions</h5>
+                        <p class="text-muted small mb-0">Join thousands of donors transforming lives across Pakistan.</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 flex-shrink-0">
+                        <a asp-controller="Donation" asp-action="Donate" class="btn btn-warning fw-bold text-dark btn-pulse">
+                            <i class="bi bi-heart-fill text-danger me-1"></i> Donate Now
+                        </a>
+                        <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-primary">
+                            Explore Drives
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

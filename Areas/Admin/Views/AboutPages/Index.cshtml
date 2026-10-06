@@ -1,0 +1,84 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.AboutPage>
+@{
+    ViewData["Title"] = "About Us CMS Pages";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">About Us CMS Pages</h2>
+        <p class="text-muted small mb-0">Manage content, mission, vision, and operational stories presented on public about sections.</p>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-4 text-center text-muted">No About CMS pages found.</div>
+}
+else
+{
+    <div class="d-md-none d-flex flex-column gap-3 mb-4">
+        @foreach (var cms in Model)
+        {
+            <div class="admin-mobile-card">
+                <div class="fw-bold text-primary mb-1">@cms.Title</div>
+                <div class="admin-mobile-meta mb-3">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Section</span>
+                        <span class="admin-mobile-value"><code>@cms.SectionKey</code></span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Subtitle</span>
+                        <span class="admin-mobile-value">@(string.IsNullOrEmpty(cms.Subtitle) ? "None" : cms.Subtitle)</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Modified</span>
+                        <span class="admin-mobile-value small">@cms.LastModifiedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">By</span>
+                        <span class="admin-mobile-value"><span class="badge bg-light text-dark border">@cms.ModifiedBy</span></span>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <a asp-area="Admin" asp-controller="AboutPages" asp-action="Edit" asp-route-id="@cms.Id" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil-square me-1"></i> Edit Content
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden d-none d-md-block">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Section Key</th>
+                        <th>Page Title</th>
+                        <th>Subtitle</th>
+                        <th>Last Modified</th>
+                        <th>Modified By</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cms in Model)
+                    {
+                        <tr>
+                            <td><code>@cms.SectionKey</code></td>
+                            <td class="fw-bold text-primary">@cms.Title</td>
+                            <td><span class="text-muted small">@(string.IsNullOrEmpty(cms.Subtitle) ? "None" : cms.Subtitle)</span></td>
+                            <td>@(cms.LastModifiedAt.ToString("MMM dd, yyyy HH:mm"))</td>
+                            <td><span class="badge bg-light text-dark border">@cms.ModifiedBy</span></td>
+                            <td class="text-end">
+                                <a asp-area="Admin" asp-controller="AboutPages" asp-action="Edit" asp-route-id="@cms.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit Content
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

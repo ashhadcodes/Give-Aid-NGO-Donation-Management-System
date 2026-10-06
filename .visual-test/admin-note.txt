@@ -1,0 +1,1 @@
+Admin requires auth; HTML checks already passed

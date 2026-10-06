@@ -1,0 +1,54 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.Partner>
+@{
+    ViewData["Title"] = "Our Partners & Corporate Alliances";
+}
+
+<div class="hero-wrapper py-4 py-md-5 text-center position-relative">
+    <div class="hero-mesh-overlay"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill mb-2 fw-bold">
+            <i class="bi bi-handshake-fill text-dark me-1"></i> Strategic CSR Alliances
+        </span>
+        <h1 class="display-5 fw-bolder mb-2 text-dark">Our Esteemed Partners</h1>
+        <p class="lead text-secondary max-w-2xl mx-auto mb-0 fs-6">
+            Collaborating with world-class corporations, educational institutes, and philanthropy networks to scale our humanitarian reach.
+        </p>
+    </div>
+</div>
+
+<div class="container my-4 my-md-5">
+    <div class="card-grid-responsive">
+        @foreach (var partner in Model)
+        {
+            <div class="d-flex">
+                <div class="card h-100 w-100 card-hover border-0 shadow-sm p-3.5 text-center rounded-4 partner-card">
+                    <img src="@(string.IsNullOrEmpty(partner.LogoUrl) ? "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=300&auto=format&fit=crop&q=80" : partner.LogoUrl)" 
+                         class="mx-auto mb-3 rounded-circle border shadow-sm p-1" style="width: 72px; height: 72px; object-fit: cover;" alt="@partner.Name" loading="lazy">
+                    <h5 class="fw-bold mb-2 text-primary">@partner.Name</h5>
+                    <p class="text-muted small flex-grow-1 mb-3">@partner.Description</p>
+                    @if (!string.IsNullOrEmpty(partner.Website))
+                    {
+                        <a href="@partner.Website" target="_blank" class="btn btn-outline-primary btn-sm mt-auto">
+                            <i class="bi bi-box-arrow-up-right me-1"></i> Visit Website
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Partnership Callout -->
+    <div class="card bg-light border-0 shadow-sm p-4 p-md-5 mt-4 mt-md-5 text-center rounded-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3 text-dark">Partner with Give-AID for Corporate Social Responsibility</h3>
+                <p class="text-muted mb-4">
+                    Is your organization looking to implement meaningful CSR initiatives, employee donation matching, or direct community sponsorship? Contact our alliances team today.
+                </p>
+                <a asp-controller="Contact" asp-action="Index" class="btn btn-primary btn-lg fw-semibold">
+                    <i class="bi bi-envelope-fill me-2"></i> Contact Partnerships Team
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

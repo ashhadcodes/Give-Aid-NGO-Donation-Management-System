@@ -1,0 +1,32 @@
+﻿@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "Dashboard";
+}
+
+<!-- Mobile/Tablet Horizontal Scroll Nav (d-lg-none) -->
+<div class="col-12 d-lg-none mb-3">
+    <div class="d-flex flex-nowrap overflow-x-auto pb-2 gap-2 text-nowrap user-nav-scroll">
+        <a class="btn btn-sm @(currentAction == "Dashboard" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="Dashboard"><i class="bi bi-grid-1x2-fill me-1"></i> Overview</a>
+        <a class="btn btn-sm @(currentAction == "MyDonations" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="MyDonations"><i class="bi bi-receipt me-1"></i> Donations</a>
+        <a class="btn btn-sm @(currentAction == "MyInterests" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="MyInterests"><i class="bi bi-calendar-check me-1"></i> Interests</a>
+        <a class="btn btn-sm @(currentAction == "MyQueries" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="MyQueries"><i class="bi bi-chat-dots me-1"></i> Queries</a>
+        <a class="btn btn-sm @(currentAction == "InviteFriend" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="InviteFriend"><i class="bi bi-person-plus-fill me-1"></i> Invite</a>
+        <a class="btn btn-sm @(currentAction == "Profile" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="Profile"><i class="bi bi-person-lines-fill me-1"></i> Profile</a>
+        <a class="btn btn-sm @(currentAction == "ChangePassword" ? "btn-primary fw-bold" : "btn-outline-secondary")" asp-controller="Account" asp-action="ChangePassword"><i class="bi bi-key-fill me-1"></i> Password</a>
+    </div>
+</div>
+
+<!-- Desktop/Laptop Vertical Navigation (d-none d-lg-block) -->
+<div class="col-lg-3 d-none d-lg-block">
+    <div class="card border-0 shadow-sm p-3 sticky-lg-top" style="top: 90px;">
+        <h6 class="text-uppercase text-muted fw-bold px-3 py-2 small mb-1">Account Menu</h6>
+        <div class="nav flex-column nav-pills gap-1">
+            <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")" asp-controller="Account" asp-action="Dashboard"><i class="bi bi-grid-1x2-fill me-2"></i> Overview</a>
+            <a class="nav-link @(currentAction == "MyDonations" ? "active" : "")" asp-controller="Account" asp-action="MyDonations"><i class="bi bi-receipt me-2"></i> My Donations</a>
+            <a class="nav-link @(currentAction == "MyInterests" ? "active" : "")" asp-controller="Account" asp-action="MyInterests"><i class="bi bi-calendar-check me-2"></i> Programme Interests</a>
+            <a class="nav-link @(currentAction == "MyQueries" ? "active" : "")" asp-controller="Account" asp-action="MyQueries"><i class="bi bi-chat-dots me-2"></i> My Queries</a>
+            <a class="nav-link @(currentAction == "InviteFriend" ? "active" : "")" asp-controller="Account" asp-action="InviteFriend"><i class="bi bi-person-plus-fill me-2"></i> Invite Friends</a>
+            <a class="nav-link @(currentAction == "Profile" ? "active" : "")" asp-controller="Account" asp-action="Profile"><i class="bi bi-person-lines-fill me-2"></i> Edit Profile</a>
+            <a class="nav-link @(currentAction == "ChangePassword" ? "active" : "")" asp-controller="Account" asp-action="ChangePassword"><i class="bi bi-key-fill me-2"></i> Change Password</a>
+        </div>
+    </div>
+</div>

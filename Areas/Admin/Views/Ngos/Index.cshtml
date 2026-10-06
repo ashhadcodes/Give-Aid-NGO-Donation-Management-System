@@ -1,0 +1,146 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.NGO>
+@{
+    ViewData["Title"] = "Manage Partner NGOs";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">Partner Non-Governmental Organizations</h2>
+        <p class="text-muted small mb-0">Manage certified NGO partners collaborating with Give-AID across Pakistan.</p>
+    </div>
+    <a asp-area="Admin" asp-controller="Ngos" asp-action="Create" class="btn btn-primary btn-sm flex-shrink-0">
+        <i class="bi bi-plus-circle me-1"></i> Register New NGO
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-4 text-center text-muted">No NGOs registered. Click "Register New NGO" to add one.</div>
+}
+else
+{
+    <div class="d-md-none d-flex flex-column gap-3 mb-4">
+        @foreach (var ngo in Model)
+        {
+            <div class="admin-mobile-card">
+                <div class="d-flex align-items-start gap-3 mb-2">
+                    <img src="@(string.IsNullOrEmpty(ngo.LogoUrl) ? "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=80&auto=format&fit=crop&q=80" : ngo.LogoUrl)"
+                         class="rounded border admin-thumb admin-thumb-contain" alt="@ngo.Name" />
+                    <div class="min-w-0 flex-grow-1">
+                        <div class="fw-bold text-primary">@ngo.Name</div>
+                        <small class="text-muted">Est. @ngo.EstablishedYear</small>
+                    </div>
+                    @if (ngo.IsActive)
+                    {
+                        <span class="badge bg-success flex-shrink-0">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary flex-shrink-0">Inactive</span>
+                    }
+                </div>
+                <div class="admin-mobile-meta mb-3">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Reg No</span>
+                        <span class="admin-mobile-value"><code>@(string.IsNullOrEmpty(ngo.RegistrationNumber) ? "N/A" : ngo.RegistrationNumber)</code></span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Contact</span>
+                        <span class="admin-mobile-value">
+                            <div>@ngo.Email</div>
+                            <small class="text-muted">@ngo.Phone</small>
+                        </span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Location</span>
+                        <span class="admin-mobile-value">@(string.IsNullOrEmpty(ngo.City) ? "" : $"{ngo.City}, ")@ngo.Country</span>
+                    </div>
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Programmes</span>
+                        <span class="admin-mobile-value"><span class="badge bg-info text-dark">@(ngo.Programmes?.Count ?? 0) Active</span></span>
+                    </div>
+                </div>
+                <div class="admin-mobile-actions">
+                    <a asp-area="Admin" asp-controller="Ngos" asp-action="Edit" asp-route-id="@ngo.Id" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i> Edit
+                    </a>
+                    <form asp-area="Admin" asp-controller="Ngos" asp-action="ToggleStatus" asp-route-id="@ngo.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm @(ngo.IsActive ? "btn-outline-warning" : "btn-outline-success")">
+                            <i class="bi @(ngo.IsActive ? "bi-pause-circle" : "bi-play-circle") me-1"></i>
+                            @(ngo.IsActive ? "Pause" : "Activate")
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden d-none d-md-block">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Logo</th>
+                        <th>NGO Name</th>
+                        <th>Reg No</th>
+                        <th>Contact Info</th>
+                        <th>Location</th>
+                        <th>Programmes</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ngo in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@(string.IsNullOrEmpty(ngo.LogoUrl) ? "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=80&auto=format&fit=crop&q=80" : ngo.LogoUrl)"
+                                     class="rounded border admin-thumb admin-thumb-contain" alt="@ngo.Name">
+                            </td>
+                            <td>
+                                <div class="fw-bold text-primary">@ngo.Name</div>
+                                <small class="text-muted">Est. @ngo.EstablishedYear</small>
+                            </td>
+                            <td><code>@(string.IsNullOrEmpty(ngo.RegistrationNumber) ? "N/A" : ngo.RegistrationNumber)</code></td>
+                            <td>
+                                <div class="small"><i class="bi bi-envelope me-1"></i> @ngo.Email</div>
+                                <div class="small text-muted"><i class="bi bi-telephone me-1"></i> @ngo.Phone</div>
+                            </td>
+                            <td>
+                                <span class="small">@(string.IsNullOrEmpty(ngo.City) ? "" : $"{ngo.City}, ")@ngo.Country</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info text-dark">@(ngo.Programmes?.Count ?? 0) Active</span>
+                            </td>
+                            <td>
+                                @if (ngo.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex flex-wrap justify-content-end gap-1">
+                                    <a asp-area="Admin" asp-controller="Ngos" asp-action="Edit" asp-route-id="@ngo.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-area="Admin" asp-controller="Ngos" asp-action="ToggleStatus" asp-route-id="@ngo.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(ngo.IsActive ? "btn-outline-warning" : "btn-outline-success")" title="Toggle Status">
+                                            <i class="bi @(ngo.IsActive ? "bi-pause-circle" : "bi-play-circle")"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

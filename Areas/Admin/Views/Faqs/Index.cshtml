@@ -1,0 +1,115 @@
+@model IEnumerable<Give_Aid_NGO_Donation_Management_System.Models.Entities.Faq>
+@{
+    ViewData["Title"] = "Manage FAQs";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 admin-page-header">
+    <div class="min-w-0">
+        <h2 class="fw-bold mb-1">Frequently Asked Questions</h2>
+        <p class="text-muted small mb-0">Manage question banks and answers displayed in the public Help Centre.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2 flex-shrink-0">
+        <a asp-area="Admin" asp-controller="Faqs" asp-action="Categories" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-folder2-open me-1"></i> FAQ Categories
+        </a>
+        <a asp-area="Admin" asp-controller="Faqs" asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-circle me-1"></i> Add FAQ
+        </a>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm p-4 text-center text-muted">No FAQs found. Click "Add FAQ" to create one.</div>
+}
+else
+{
+    <div class="d-md-none d-flex flex-column gap-3 mb-4">
+        @foreach (var faq in Model)
+        {
+            <div class="admin-mobile-card">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                    <span class="badge bg-light text-primary border">@(faq.Category?.Name ?? "General")</span>
+                    @if (faq.IsActive)
+                    {
+                        <span class="badge bg-success flex-shrink-0">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary flex-shrink-0">Inactive</span>
+                    }
+                </div>
+                <div class="fw-semibold mb-2">@faq.Question</div>
+                <p class="text-muted small mb-3">@faq.Answer</p>
+                <div class="admin-mobile-meta mb-3">
+                    <div class="admin-mobile-row">
+                        <span class="admin-mobile-label">Order</span>
+                        <span class="admin-mobile-value">@faq.DisplayOrder</span>
+                    </div>
+                </div>
+                <div class="admin-mobile-actions">
+                    <a asp-area="Admin" asp-controller="Faqs" asp-action="Edit" asp-route-id="@faq.Id" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i> Edit
+                    </a>
+                    <form asp-area="Admin" asp-controller="Faqs" asp-action="Delete" asp-route-id="@faq.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this FAQ?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash me-1"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden d-none d-md-block">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Category</th>
+                        <th>Question</th>
+                        <th>Answer Preview</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var faq in Model)
+                    {
+                        <tr>
+                            <td><span class="badge bg-light text-primary border">@(faq.Category?.Name ?? "General")</span></td>
+                            <td class="fw-semibold">@faq.Question</td>
+                            <td class="text-muted small">@faq.Answer</td>
+                            <td>@faq.DisplayOrder</td>
+                            <td>
+                                @if (faq.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex flex-wrap justify-content-end gap-1">
+                                    <a asp-area="Admin" asp-controller="Faqs" asp-action="Edit" asp-route-id="@faq.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-area="Admin" asp-controller="Faqs" asp-action="Delete" asp-route-id="@faq.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this FAQ?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

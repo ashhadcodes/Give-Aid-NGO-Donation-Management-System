@@ -1,0 +1,141 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationCause
+@{
+    ViewData["Title"] = $"{Model.Title} - Verified Cause";
+    var percentage = Model.TargetAmount > 0 ? (int)Math.Min(100, Math.Round((Model.RaisedAmount / Model.TargetAmount) * 100)) : 0;
+    var catIcon = Model.Category?.ToLowerInvariant() switch
+    {
+        "healthcare" or "health" or "medical" => "bi-heart-pulse-fill",
+        "education" or "school" => "bi-mortarboard-fill",
+        "children" or "orphan" or "orphan support" => "bi-person-heart",
+        "water" or "clean water" => "bi-droplet-fill",
+        "disaster" or "emergency" or "flood" => "bi-life-preserver",
+        "poverty" or "hunger" or "food" => "bi-cup-hot-fill",
+        _ => "bi-heart-fill"
+    };
+}
+
+<div class="hero-wrapper py-4 py-md-5 position-relative">
+    <div class="hero-mesh-overlay"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3 small">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-secondary text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Donation" asp-action="Index" class="text-secondary text-decoration-none">Causes</a></li>
+                <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">@Model.Title</li>
+            </ol>
+        </nav>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+            <span class="badge bg-success-subtle text-success px-3 py-1.5 rounded-pill fw-bold">
+                <i class="bi @catIcon me-1"></i> @Model.Category
+            </span>
+            <span class="badge bg-light text-secondary border px-3 py-1.5 rounded-pill fw-semibold">
+                <code>@Model.Code</code>
+            </span>
+            @if (Model.IsFeatured)
+            {
+                <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold">
+                    <i class="bi bi-fire text-danger me-1"></i> Urgent Need
+                </span>
+            }
+        </div>
+        <h1 class="display-5 fw-bolder mb-2 text-dark">@Model.Title</h1>
+        <p class="lead text-secondary max-w-2xl mb-0 fs-6">
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i> Pakistan &bull; Nationwide Humanitarian Relief Operation
+        </p>
+    </div>
+</div>
+
+<div class="container my-4 my-md-5">
+    <div class="row g-4 g-lg-5">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm overflow-hidden mb-4 rounded-4">
+                <div class="ratio ratio-16x9 bg-light">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=1000&auto=format&fit=crop&q=80" : Model.ImageUrl)" 
+                         class="w-100 h-100 object-fit-cover" alt="@Model.Title">
+                </div>
+                <div class="card-body p-3 p-sm-4 p-md-5">
+                    <h3 class="fw-bold mb-3 text-dark">About This Humanitarian Mission</h3>
+                    <div class="text-secondary fs-6 lh-lg mb-4" style="white-space: pre-line;">
+                        @Model.Description
+                    </div>
+
+                    <div class="row g-3 my-4">
+                        <div class="col-sm-4">
+                            <div class="p-3 border rounded-3 bg-light text-center h-100">
+                                <i class="bi bi-shield-check text-success fs-3 mb-1"></i>
+                                <h6 class="fw-bold mb-1">100% Direct Allocation</h6>
+                                <small class="text-muted">Zero administrative fee deduction on this fund.</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="p-3 border rounded-3 bg-light text-center h-100">
+                                <i class="bi bi-receipt text-primary fs-3 mb-1"></i>
+                                <h6 class="fw-bold mb-1">Tax-Deductible Receipt</h6>
+                                <small class="text-muted">Instant cryptographic receipt generated with QR code.</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="p-3 border rounded-3 bg-light text-center h-100">
+                                <i class="bi bi-eye text-info fs-3 mb-1"></i>
+                                <h6 class="fw-bold mb-1">Audited Execution</h6>
+                                <small class="text-muted">Field operations verified by independent oversight.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border-0 p-3.5 mt-4 rounded-4">
+                        <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+                            <div class="rounded-circle shadow-sm border bg-white p-2 flex-shrink-0 d-flex align-items-center justify-content-center text-success" style="width: 68px; height: 68px;">
+                                <i class="bi bi-patch-check-fill fs-1"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge bg-success-subtle text-success small"><i class="bi bi-patch-check-fill"></i> Verified Give-AID Welfare Cause</span>
+                                </div>
+                                <h5 class="fw-bold mb-1 text-dark">Give-AID National Welfare Initiative</h5>
+                                <p class="small text-muted mb-0"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Islamabad, Pakistan &bull; Transparent Direct Fund Allocation</p>
+                            </div>
+                            <a asp-controller="About" asp-action="Index" class="btn btn-outline-primary btn-sm flex-shrink-0 fw-semibold">
+                                About Give-AID
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 rounded-4 sticky-lg-top" style="top: 90px;">
+                <span class="badge bg-success-subtle text-success fw-bold px-3 py-1 rounded-pill mb-3 align-self-start">
+                    <i class="bi bi-wallet2 me-1"></i> Financial Target
+                </span>
+
+                <h4 class="fw-bold mb-1 text-success">PKR @Model.RaisedAmount.ToString("N0")</h4>
+                <div class="d-flex justify-content-between small text-muted mb-2">
+                    <span>Raised so far</span>
+                    <span class="fw-semibold">Goal: PKR @Model.TargetAmount.ToString("N0")</span>
+                </div>
+
+                <div class="progress progress-giveaid mb-2" style="height: 8px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @percentage%;" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small text-muted mb-4">
+                    <span class="fw-bold text-dark">@percentage% Funded</span>
+                    <span>@(Model.TargetAmount - Model.RaisedAmount > 0 ? $"PKR {(Model.TargetAmount - Model.RaisedAmount):N0} Remaining" : "Goal Reached!")</span>
+                </div>
+
+                <a asp-controller="Donation" asp-action="Donate" asp-route-causeId="@Model.Id" class="btn btn-warning w-100 fw-bold py-3 fs-5 text-dark shadow-sm btn-pulse mb-3">
+                    <i class="bi bi-heart-fill text-danger me-2"></i> Donate to This Cause
+                </a>
+
+                <div class="p-3 bg-light rounded-3 text-center small text-muted">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                        <i class="bi bi-shield-lock-fill text-success"></i>
+                        <strong class="text-dark">Secure 256-Bit SSL Checkout</strong>
+                    </div>
+                    <span>Supports JazzCash, Easypaisa, Debit/Credit Cards & Direct Bank Transfer.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

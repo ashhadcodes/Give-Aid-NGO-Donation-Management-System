@@ -1,0 +1,425 @@
+@model Give_Aid_NGO_Donation_Management_System.Models.Entities.Donation
+@{
+    ViewData["Title"] = $"Donation #{Model.Id} Details";
+    var lastTxn = Model.PaymentTransactions.LastOrDefault();
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Donations" asp-action="Index">Donations</a></li>
+                <li class="breadcrumb-item active">#@Model.Id</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">Donation #@Model.Id Details</h2>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        @if (Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid)
+        {
+            <a asp-controller="Donation" asp-action="Receipt" asp-route-id="@Model.Id" target="_blank" class="btn btn-outline-success btn-sm">
+                <i class="bi bi-receipt me-1"></i> View Official Receipt
+            </a>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#refundModal">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Issue Refund
+            </button>
+        }
+        else if (Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+        {
+            <button type="button" class="btn btn-success btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
+                <i class="bi bi-check-circle-fill me-1"></i> Verify & Approve Donation
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                <i class="bi bi-x-circle-fill me-1"></i> Reject Payment
+            </button>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8 col-12">
+        <!-- Donation Overview -->
+        <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4">
+            <h5 class="fw-bold text-primary mb-3">Donation Summary</h5>
+            <div class="row g-3">
+                <div class="col-sm-6 col-12">
+                    <small class="text-muted d-block">Allocated Cause</small>
+                    <strong class="fs-6">@Model.Cause?.Title</strong>
+                </div>
+                <div class="col-sm-6 col-12">
+                    <small class="text-muted d-block">Donation Amount</small>
+                    <strong class="fs-5 text-success">@Model.Currency @Model.Amount.ToString("N2")</strong>
+                </div>
+                <div class="col-sm-6 col-12">
+                    <small class="text-muted d-block">Current Status</small>
+                    <span class="badge @(Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid ? "bg-success" : Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending ? "bg-warning text-dark" : "bg-danger") fs-6">
+                        @Model.Status
+                    </span>
+                </div>
+                <div class="col-sm-6 col-12">
+                    <small class="text-muted d-block">Date Received</small>
+                    <span>@Model.CreatedAt.ToString("dd MMM yyyy, HH:mm:ss") UTC</span>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.DonorNotes))
+                {
+                    <div class="col-12">
+                        <small class="text-muted d-block">Donor Message / Dedication</small>
+                        <p class="mb-0 p-2 bg-light rounded small">@Model.DonorNotes</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Manual Bank Transfer / Mobile Wallet Verification Box -->
+        @{
+            string? proofFile = null;
+            string? channel = lastTxn?.GatewayName;
+            string? depositRef = lastTxn?.GatewayTransactionId;
+            string? depositDate = null;
+            string? transferNotes = null;
+            string? senderMobile = Model.DonorPhone;
+            string? accountNumber = "03272762043";
+
+            if (!string.IsNullOrEmpty(lastTxn?.GatewayRawResponse))
+            {
+                try
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(lastTxn.GatewayRawResponse);
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("proofFilePath", out var pf)) proofFile = pf.GetString();
+                    if (root.TryGetProperty("channel", out var ch)) channel = ch.GetString();
+                    if (root.TryGetProperty("depositReference", out var dr)) depositRef = dr.GetString();
+                    if (root.TryGetProperty("depositDate", out var dd)) depositDate = dd.GetString();
+                    if (root.TryGetProperty("transferNotes", out var tn)) transferNotes = tn.GetString();
+                    if (root.TryGetProperty("senderMobile", out var sm)) senderMobile = sm.GetString();
+                    if (root.TryGetProperty("accountNumber", out var an)) accountNumber = an.GetString();
+                }
+                catch { }
+            }
+        }
+
+        @if (lastTxn?.PaymentMethod == Give_Aid_NGO_Donation_Management_System.Models.Entities.PaymentProvider.BankTransfer || 
+             lastTxn?.PaymentMethod == Give_Aid_NGO_Donation_Management_System.Models.Entities.PaymentProvider.JazzCash || 
+             lastTxn?.PaymentMethod == Give_Aid_NGO_Donation_Management_System.Models.Entities.PaymentProvider.Easypaisa || 
+             Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+        {
+            <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4 border-start border-warning border-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <h5 class="fw-bold text-warning mb-0"><i class="bi bi-shield-check me-1"></i> Payment Verification & Proof</h5>
+                    @if (Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+                    {
+                        <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Awaiting Admin Verification</span>
+                    }
+                    else if (Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid)
+                    {
+                        <span class="badge bg-success"><i class="bi bi-check2-circle"></i> Verified & Approved</span>
+                    }
+                    else if (Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Failed)
+                    {
+                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Rejected</span>
+                    }
+                </div>
+
+                <div class="row g-3 small">
+                    <div class="col-sm-6 col-12">
+                        <strong class="text-muted d-block">Transaction ID / Reference:</strong>
+                        <code class="fs-6 fw-bold text-primary">@(depositRef ?? lastTxn?.TransactionId ?? "N/A")</code>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <strong class="text-muted d-block">Payment Method / Channel:</strong>
+                        <span class="badge bg-light text-dark border fs-6">@(channel ?? Model.PaymentMethod)</span>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <strong class="text-muted d-block">Give-Aid Recipient Account:</strong>
+                        <span class="fw-semibold">@(accountNumber ?? "03272762043") (Give-Aid Foundation)</span>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <strong class="text-muted d-block">Sender Mobile / Phone:</strong>
+                        <span>@(senderMobile ?? Model.DonorPhone ?? "N/A")</span>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <strong class="text-muted d-block">Submission Date:</strong>
+                        <span>@(depositDate ?? Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")) UTC</span>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <strong class="text-muted d-block">Amount to Verify:</strong>
+                        <span class="fw-bold text-success fs-6">@Model.Currency @Model.Amount.ToString("N2")</span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(proofFile))
+                    {
+                        <div class="col-12 mt-3">
+                            <strong class="text-muted d-block mb-2">Uploaded Payment Screenshot:</strong>
+                            <div class="d-flex flex-column flex-sm-row flex-wrap align-items-sm-center gap-3 p-3 rounded bg-light border">
+                                <a href="@proofFile" target="_blank" data-bs-toggle="modal" data-bs-target="#screenshotModal" class="d-inline-block">
+                                    <img src="@proofFile" alt="Payment Screenshot" class="rounded border shadow-sm admin-proof-thumb" />
+                                </a>
+                                <div class="d-flex flex-column gap-2 min-w-0 flex-grow-1">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#screenshotModal">
+                                            <i class="bi bi-zoom-in me-1"></i> View Full Resolution
+                                        </button>
+                                        <a href="@proofFile" target="_blank" class="btn btn-sm btn-outline-secondary" download>
+                                            <i class="bi bi-download me-1"></i> Download
+                                        </a>
+                                    </div>
+                                    <small class="text-muted">Click image or button above to inspect transaction ID and amount.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Screenshot Lightbox Modal -->
+                        <div class="modal fade" id="screenshotModal" tabindex="-1" aria-labelledby="screenshotModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="screenshotModalLabel"><i class="bi bi-image me-1"></i> Payment Proof - Donation #@Model.Id</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center p-2" style="background: #111;">
+                                        <img src="@proofFile" alt="Full Payment Screenshot" class="img-fluid rounded w-100" style="max-height: 75vh; object-fit: contain;" />
+                                    </div>
+                                    <div class="modal-footer flex-wrap gap-2">
+                                        <a href="@proofFile" target="_blank" class="btn btn-sm btn-primary">Open in New Tab</a>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <strong class="text-muted d-block">Uploaded Screenshot:</strong>
+                            <span class="text-muted">No screenshot attached</span>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(transferNotes))
+                    {
+                        <div class="col-12">
+                            <strong class="text-muted d-block">Donor Remarks / Notes:</strong>
+                            <p class="mb-0 p-2 rounded bg-light small">@transferNotes</p>
+                        </div>
+                    }
+                </div>
+
+                @if (Model.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Pending)
+                {
+                    <div class="d-flex flex-wrap gap-2 mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-success fw-bold px-3 py-2" data-bs-toggle="modal" data-bs-target="#approveModal">
+                            <i class="bi bi-check-circle-fill me-1"></i> Approve Donation
+                        </button>
+                        <button type="button" class="btn btn-outline-danger fw-semibold px-3 py-2" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                            <i class="bi bi-x-circle-fill me-1"></i> Reject Donation
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Payment Gateway Transactions -->
+        <div class="card border-0 shadow-sm p-3 p-sm-4">
+            <h5 class="fw-bold text-primary mb-3">Gateway Transaction Trail</h5>
+
+            <div class="d-md-none d-flex flex-column gap-3">
+                @foreach (var txn in Model.PaymentTransactions)
+                {
+                    <div class="admin-mobile-card">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <strong>@txn.PaymentMethod</strong>
+                            <span class="badge @(txn.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid ? "bg-success" : "bg-danger") flex-shrink-0">@txn.Status</span>
+                        </div>
+                        <div class="admin-mobile-meta">
+                            <div class="admin-mobile-row">
+                                <span class="admin-mobile-label">Txn ID</span>
+                                <span class="admin-mobile-value"><code>@txn.TransactionId</code></span>
+                            </div>
+                            <div class="admin-mobile-row">
+                                <span class="admin-mobile-label">Gateway Ref</span>
+                                <span class="admin-mobile-value"><code>@(txn.GatewayTransactionId ?? "N/A")</code></span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(txn.MaskedCardNumber) || !string.IsNullOrEmpty(txn.FailureReason))
+                            {
+                                <div class="admin-mobile-row">
+                                    <span class="admin-mobile-label">Details</span>
+                                    <span class="admin-mobile-value">
+                                        @if (!string.IsNullOrEmpty(txn.MaskedCardNumber))
+                                        {
+                                            <div>@txn.CardBrand (@txn.MaskedCardNumber)</div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(txn.FailureReason))
+                                        {
+                                            <div class="text-danger small">@txn.FailureReason</div>
+                                        }
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="table-responsive admin-table-wrap d-none d-md-block">
+                <table class="table table-bordered small align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Internal Txn ID</th>
+                            <th>Method</th>
+                            <th>Gateway Ref</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var txn in Model.PaymentTransactions)
+                        {
+                            <tr>
+                                <td><code>@txn.TransactionId</code></td>
+                                <td><strong>@txn.PaymentMethod</strong></td>
+                                <td><code>@(txn.GatewayTransactionId ?? "N/A")</code></td>
+                                <td><span class="badge @(txn.Status == Give_Aid_NGO_Donation_Management_System.Models.Entities.DonationStatus.Paid ? "bg-success" : "bg-danger")">@txn.Status</span></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(txn.MaskedCardNumber))
+                                    {
+                                        <div>@txn.CardBrand (@txn.MaskedCardNumber)</div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(txn.FailureReason))
+                                    {
+                                        <div class="text-danger small">@txn.FailureReason</div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donor Information Card -->
+    <div class="col-lg-4 col-12">
+        <div class="card border-0 shadow-sm p-3 p-sm-4 sticky-lg-top" style="top: calc(var(--admin-topbar-h, 56px) + 1rem);">
+            <h5 class="fw-bold text-primary mb-3">Donor Details</h5>
+            <ul class="list-unstyled small d-flex flex-column gap-3 mb-0">
+                <li>
+                    <strong class="text-muted d-block">Donor Name</strong>
+                    <span class="fw-semibold">@Model.DonorName</span>
+                    @if (Model.IsAnonymous)
+                    {
+                        <span class="badge bg-secondary ms-1">Anonymous Toggle ON</span>
+                    }
+                </li>
+                <li>
+                    <strong class="text-muted d-block">Email Address</strong>
+                    <span>@Model.DonorEmail</span>
+                </li>
+                <li>
+                    <strong class="text-muted d-block">Phone Number</strong>
+                    <span>@(Model.DonorPhone ?? "Not Provided")</span>
+                </li>
+                <li>
+                    <strong class="text-muted d-block">Member Account</strong>
+                    @if (Model.User != null)
+                    {
+                        <a asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@Model.UserId" class="btn btn-sm btn-outline-primary mt-1">
+                            <i class="bi bi-person me-1"></i> View Member Profile
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Guest Donor (Not registered)</span>
+                    }
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Refund Modal -->
+<div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="refundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-area="Admin" asp-controller="Donations" asp-action="Refund" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="refundModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i> Confirm Refund</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to refund Donation <strong>#@Model.Id</strong> for amount <strong>@Model.Currency @Model.Amount.ToString("N2")</strong>?</p>
+                    <p class="small text-muted">This will reverse the cause raised balance, invoke the gateway refund endpoint, and update the status to Refunded.</p>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Reason for Refund</label>
+                        <textarea name="reason" class="form-control" rows="3" placeholder="Enter reason (e.g. Donor requested reversal, accidental duplicate charge)..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger fw-bold">Confirm & Execute Refund</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Approve Manual Payment Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-area="Admin" asp-controller="Donations" asp-action="ApproveManual" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="approveModalLabel"><i class="bi bi-check-circle-fill me-2"></i> Approve Manual Donation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to verify and approve Donation <strong>#@Model.Id</strong> of <strong>@Model.Currency @Model.Amount.ToString("N2")</strong> from <strong>@Model.DonorName</strong>?</p>
+                    <div class="alert alert-success py-2 px-3 small">
+                        <i class="bi bi-info-circle-fill me-1"></i>
+                        This will mark the donation as <strong>Paid</strong>, allocate funds to <strong>@Model.Cause?.Title</strong>, generate an official digitally signed tax receipt, and dispatch a receipt email to <strong>@Model.DonorEmail</strong>.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Verification Notes (Optional)</label>
+                        <textarea name="notes" class="form-control" rows="3" placeholder="e.g. Bank statement credited on 2026-09-07, transaction verified..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-check-lg me-1"></i> Confirm & Issue Receipt</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Manual Payment Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-area="Admin" asp-controller="Donations" asp-action="RejectManual" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="rejectModalLabel"><i class="bi bi-x-circle-fill me-2"></i> Reject Manual Donation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to reject Donation <strong>#@Model.Id</strong> of <strong>@Model.Currency @Model.Amount.ToString("N2")</strong>?</p>
+                    <div class="alert alert-warning py-2 px-3 small">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                        This will mark the donation status as <strong>Failed</strong> and notify the donor via email with the rejection reason.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Rejection Reason <span class="text-danger">*</span></label>
+                        <textarea name="reason" class="form-control" rows="3" required placeholder="e.g. Funds not received in bank account, invalid deposit slip reference, unreadable image..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger fw-bold"><i class="bi bi-x-lg me-1"></i> Confirm Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
